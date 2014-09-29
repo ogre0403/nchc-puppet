@@ -1,0 +1,105 @@
+startup_message off
+vbell off
+# 加入狀態列。
+caption always "%{=u .r} %-w%<%{=ub .Y}%n %t%{=u .r}%+w "
+hardstatus alwaysignore
+hardstatus alwayslastline "%{= .K} [%l]%<%=%{= .Y}$USER%{= .R}@%H %=%{= .m} %Y/%m/%d%{= .M} %0c "
+
+# 將預設編碼設為 UTF-8。
+defutf8 on
+
+# = 自訂熱鍵 =
+
+# == Alt ==
+
+# - Alt + r : 清理當前視窗。 (C-a c)
+bindkey "^[r" clear
+
+# - Alt + s : 進入複製/捲動模式。 (C-a esc)
+bindkey "^[s" copy
+
+# - Alt + h : 將 screen 丟至背景執行。 (C-a d)
+bindkey "^[h" detach
+
+# - Alt + i : 顯示所有執行中的 screen。 (C-a *)
+bindkey "^[i" displays
+
+# - Alt + L : 將 screen 上鎖。 (C-a C-x)
+bindkey "^[l" lockscreen
+
+# === 分頁(Tab) ===
+
+# - Alt + t : 新增子視窗。(C-a c)
+bindkey "^[t" screen
+
+# - Alt + d : 關閉當前視窗。 (C-a k)
+bindkey "^[d" kill
+
+# - Alt + j/J : 切換至下個視窗。 (C-a n)
+bindkey "^[j" next
+bindkey "^[J" next
+
+# - Alt + k/K : 切換至上個視窗。 (C-a p)
+bindkey "^[k" prev
+bindkey "^[K" prev
+
+# - Alt + `/= : 切換子視窗 0 ~ 子視窗12。
+bindkey "^[`" select 0
+bindkey "^[1" select 1
+bindkey "^[2" select 2
+bindkey "^[3" select 3
+bindkey "^[4" select 4
+bindkey "^[5" select 5
+bindkey "^[6" select 6
+bindkey "^[7" select 7
+bindkey "^[8" select 8
+bindkey "^[9" select 9
+bindkey "^[0" select 10
+bindkey "^[-" select 11
+bindkey "^[=" select 12
+
+# === 分割(Split) ===
+
+# - Alt + o : 水平分割當前視窗。 (C-a S)
+bindkey "^[o" split
+
+# - Alt + e : 垂直分割當前視窗。 (C-a |)
+bindkey "^[e" split -v
+
+# - Alt + q : 關閉當前分割區。 (C-a X)
+bindkey "^[q" remove
+
+# - Alt + w : 切換當前分割區。 (C-a tab)
+bindkey "^[w" focus
+
+# == Ctrl ==
+
+# === 分頁(Tab) ===
+
+# - Ctrl + j/J : 切換至下個視窗。 (C-a n)
+bindkey "^j" next
+bindkey "^J" next
+
+# - Ctrl + k/K : 切換至上個視窗。 (C-a p)
+bindkey "^k" prev
+bindkey "^K" prev
+
+# == F1, F2, F3 .. ==
+
+# F1 : 新增子視窗。(C-a c)
+bindkey -k k1 screen
+
+# F2 : 自訂當前視窗標題。 (C-a A)
+bindkey -k k2 title
+
+# F3 : 進入複製/捲動模式。 (C-a esc)
+bindkey -k k3 copy
+
+# F4 : 切換至上一個視窗。 (C-a p)
+bindkey -k k4 prev
+
+# F5 : 切換至下一個視窗。 (C-a n)
+bindkey -k k5 next
+
+# F6 : 切換當前分割區。 (C-a tab)
+bindkey -k k6 focus

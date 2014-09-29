@@ -1,0 +1,14 @@
+
+Java puppet module
+
+This puppet module is based on bcarpio/java_jdk 0.0.2. bcarpio/java_jdk does not set path for exec object. Although the git repos of that module is merged with a pull request to solve that problem, its puppet module on forge is not updated accordingly. This module is uploaded to solve that.
+
+Usage
+
+Downloading java jdk (tested with jdk1.7.0_03) from Oracle and renaming it as jdk1.7.0_03.tar.gz in files/. Then defining this module in your site.pp:
+
+node 'your puppet agent node' {
+    include java
+}
+
+
