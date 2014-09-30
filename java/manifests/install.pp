@@ -51,6 +51,16 @@ class java::install{
         require => Exec["untar-java"],
     }
 
+    exec{ "chown ${java::params::java_base}/jdk${java::params::java_version}  dir":
+        command => "chown root:root -R jdk${java::params::java_version}",
+        cwd => "${java::params::java_base}/",
+        path   => ["/bin", "/usr/bin", "/usr/sbin"],
+        user => "root",
+        require => File["java-app-dir"],
+    }
+
+
+
     file { "$java::params::java_current":
         ensure => 'link',
         target => "${java::params::java_base}/jdk${java::params::java_version}",
@@ -58,24 +68,27 @@ class java::install{
         require => File["java-app-dir"],
     }
 
-    exec { "set JAVA_HOME":
-        command => "echo 'export JAVA_HOME=${java::params::java_current}    # SET_JAVA_HOME_BY_PUPPET ' >> profile",
-        cwd => "/etc",
-        user => "root",
-        path    => ["/bin", "/usr/bin", "/usr/sbin"],
-        onlyif => "test 0 -eq $(grep -c JAVA_HOME /etc/profile)",
-        alias => "java-home",
-        require => File["java-link"]
-    }
 
-    exec { "set JAVA PATH":
-        command => "echo 'export PATH=\$PATH:\$JAVA_HOME/bin     # SET_JAVA_PATH_BY_PUPPET' >> profile",
-        cwd => "/etc",
-        user => "root",
-        path    => ["/bin", "/usr/bin", "/usr/sbin"],
-        onlyif => "test 0 -eq $(grep -c JAVA_HOME/bin /etc/profile)",
-        require => Exec["java-home"]
-    }
+
+
+#    exec { "set JAVA_HOME":
+#        command => "echo 'export JAVA_HOME=${java::params::java_current}    # SET_JAVA_HOME_BY_PUPPET ' >> profile",
+#        cwd => "/etc",
+#        user => "root",
+#        path    => ["/bin", "/usr/bin", "/usr/sbin"],
+#        onlyif => "test 0 -eq $(grep -c JAVA_HOME /etc/profile)",
+#        alias => "java-home",
+#        require => File["java-link"]
+#    }
+
+#    exec { "set JAVA PATH":
+#        command => "echo 'export PATH=\$PATH:\$JAVA_HOME/bin     # SET_JAVA_PATH_BY_PUPPET' >> profile",
+#        cwd => "/etc",
+#        user => "root",
+#        path    => ["/bin", "/usr/bin", "/usr/sbin"],
+#        onlyif => "test 0 -eq $(grep -c JAVA_HOME/bin /etc/profile)",
+#        require => Exec["java-home"]
+#    }
 
 
 }

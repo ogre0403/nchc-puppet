@@ -33,14 +33,14 @@ class vagrant_base(
         require => [Package["vim"], User["${user}"]],
     }
 
-    file { "/home/${user}/.bashrc":
-        ensure => present,
-        owner => $user,
-        group => $group,
-        alias => "bashrc",
-        source => "puppet:///modules/vagrant_base/bashrc",
-        require => User["${user}"],
-    }
+#    file { "/home/${user}/.bashrc":
+#        ensure => present,
+#        owner => $user,
+#        group => $group,
+#        alias => "bashrc",
+#        source => "puppet:///modules/vagrant_base/bashrc",
+#        require => User["${user}"],
+#    }
 
     file { "/home/${user}/.vim":
         ensure => "directory",
