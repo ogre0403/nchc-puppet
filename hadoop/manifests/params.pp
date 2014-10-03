@@ -30,4 +30,34 @@ class hadoop::params{
         default     => "/opt/hadoop",
     }
 
+    #slaves
+    $slaves = $::hostname ? {
+        default  => ["DN1-agent"],
+    }
+
+    # core-site.xml
+    $master = $::hostname ? {
+        default  => "NN-agent",
+    }
+
+    $hdfsport = $::hostname ? {
+        default  => "9000",
+    }
+
+    $hadoop_tmp_path = $::hostname ? {
+        default  => "/tmp/hadoop",
+    }
+    
+    # hdfs-site.xml
+    $replica_factor = $::hostname ? {
+        default  => "1",
+    }
+
+    $namedir = $::hostname ? {
+        default  => "${hadoop::params::hadoop_tmp_path}/name",
+    }
+
+    $datadir = $::hostname ? {
+        default  => "${hadoop::params::hadoop_tmp_path}/data",
+    }
 }

@@ -1,15 +1,18 @@
 #/etc/puppet/modules/hadoop/manifests/ssh.pp
 
-class hadoop::ssh::client{
+class hadoop::ssh{
     include hadoop::params
+    file { "/home/${hadoop::params::hdadm}/.ssh/":
+        owner => "${hadoop::params::hdadm}",
+        group => "${hadoop::params::hdgrp}",
+        ensure => "directory",
+        alias => "${hadoop::params::hdadm}-ssh-dir",
+    }
+}
+
+class hadoop::ssh::client inherits hadoop::ssh{
 
     if $hadoop::params::disable_auto_ssh == "false"{
-        file { "/home/${hadoop::params::hdadm}/.ssh/":
-            owner => "${hadoop::params::hdadm}",
-            group => "${hadoop::params::hdgrp}",
-            ensure => "directory",
-            alias => "${hadoop::params::hdadm}-ssh-dir",
-        }
 
         file { "/home/${hadoop::params::hdadm}/.ssh/id_rsa":
             ensure => present,
@@ -27,16 +30,9 @@ class hadoop::ssh::client{
 }
 
 
-class hadoop::ssh::server{
-    include hadoop::params
+class hadoop::ssh::server inherits hadoop::ssh{
 
     if $hadoop::params::disable_auto_ssh == "false"{
-        file { "/home/${hadoop::params::hdadm}/.ssh/":
-            owner => "${hadoop::params::hdadm}",
-            group => "${hadoop::params::hdgrp}",
-            ensure => "directory",
-            alias => "${hadoop::params::hdadm}-ssh-dir",
-        }
 
         file { "/home/${hadoop::params::hdadm}/.ssh/authorized_keys":
             ensure => present,

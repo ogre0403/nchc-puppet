@@ -17,7 +17,7 @@ class java::uninstall{
     }
 
     exec {'remove JAVA environment var':
-        command => "sed -i '/SET_JAVA_VAR_BY_PUPPET/d' /home/${hadoop:params::hdadm}/.bashrc",
+        command => "sed -i '/SET_JAVA_VAR_BY_PUPPET/d' /home/${hadoop::params::hdadm}/.bashrc",
         path    => ["/bin", "/usr/bin", "/usr/sbin"],
         alias   => "remove-java-home",
     }

@@ -2,13 +2,11 @@
 
 class hadoop{
     include hadoop::params
-    #include java::params
-    
     
     file {"$hadoop::params::hadoop_base":
         ensure => "directory",
-        owner => "root",
-        group => "root",
+        owner => "${hadoop::params::hdadm}",
+        group => "${hadoop::params::hdgrp}",
         alias => "hadoop-base",
         before => Exec["download-hadoop"],
     }
@@ -25,8 +23,8 @@ class hadoop{
     file { "${hadoop::params::hadoop_base}/${hadoop::params::hadoop_version}.tar.gz":
         mode => 0644,
         ensure => present,
-        owner => "root",
-        group => "root",
+        owner => "${hadoop::params::hdadm}",
+        group => "${hadoop::params::hdgrp}",
         alias => "hadoop-source-tgz",
         before => Exec["untar-hadoop"],
         require => [File["hadoop-base"], Exec["download-hadoop"]],
@@ -49,20 +47,20 @@ class hadoop{
     file { "${hadoop::params::hadoop_base}/${hadoop::params::hadoop_version}":
         ensure => "directory", 
         mode => 0644,
-        owner => "root",
-        group => "root",
+        owner => "${hadoop::params::hdadm}",
+        group => "${hadoop::params::hdgrp}",
         alias => "hadoop-app-dir",
         require => Exec["untar-hadoop"],
     }
 
     exec{ "chown ${hadoop::params::hadoop_version} dir":
-        command => "chown root:root -R ${hadoop::params::hadoop_version}",
+        command => "chown ${hadoop::params::hdadm}:${hadoop::params::hdadm} -R ${hadoop::params::hadoop_version}",
         cwd => "${hadoop::params::hadoop_base}/",
         path   => ["/bin", "/usr/bin", "/usr/sbin"],  
         user => "root",
+        onlyif => "test ${hadoop::params::hdadm} != $(stat -c %U ${hadoop::params::hadoop_base}/${hadoop::params::hadoop_version}/bin)",
         require => File["hadoop-app-dir"],
     }
-
 
     file { "$hadoop::params::hadoop_current":
         ensure => 'link',

@@ -56,6 +56,7 @@ class java::install{
         cwd => "${java::params::java_base}/",
         path   => ["/bin", "/usr/bin", "/usr/sbin"],
         user => "root",
+        onlyif => "test root != $(stat -c %U ${java::params::java_base}/jdk${java::params::java_version}/bin)",
         require => File["java-app-dir"],
     }
 
