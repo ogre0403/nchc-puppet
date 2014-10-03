@@ -78,4 +78,35 @@ class hadoop::config{
         require => [File["hadoop-name-dir"],File["hadoop-data-dir"]],
     }
 
+    file {"${hadoop::params::hadoop_current}/etc/hadoop/mapred-site.xml":
+        owner => "${hadoop::params::hdadm}",
+        group => "${hadoop::params::hdgrp}",
+        mode => "664",
+        alias => "mapred-site-xml",
+        content => template("hadoop/conf/mapred-site.xml.erb"),
+    }
+
+    file {"${hadoop::params::hadoop_current}/etc/hadoop/yarn-site.xml":
+        owner => "${hadoop::params::hdadm}",
+        group => "${hadoop::params::hdgrp}",
+        mode => "664",
+        alias => "yarn-site-xml",
+        content => template("hadoop/conf/yarn-site.xml.erb"),
+    }
+
+    file {"${hadoop::params::yarn_nodemanager_localdirs}":
+        ensure => "directory",
+        owner => "${hadoop::params::hdadm}",
+        group => "${hadoop::params::hdgrp}",
+        alias => "yarn-nm-localdir",
+        require => File["hadoop-tmp-dir"],
+    }
+
+    file {"${hadoop::params::yarn_nodemanager_logdirs}":
+        ensure => "directory",
+        owner => "${hadoop::params::hdadm}",
+        group => "${hadoop::params::hdgrp}",
+        alias => "yarn-nm-logdir",
+        require => File["hadoop-tmp-dir"],
+    }
 }

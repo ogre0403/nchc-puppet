@@ -60,4 +60,31 @@ class hadoop::params{
     $datadir = $::hostname ? {
         default  => "${hadoop::params::hadoop_tmp_path}/data",
     }
+
+    #yarn-site.pp
+    
+    $resource_tracker_port = $::hostname ? {
+        default  => "8031",
+    }
+
+    $scheduler_port = $::hostname ? {
+        default  => "8030",
+    }
+
+    $rourcemanager_port = $::hostname ? {
+        default  => "8032",
+    }
+
+    $nodemanager_port = $::hostname ? {
+        default  => "8034",
+    }
+
+    $yarn_nodemanager_localdirs = $::hostname ? {
+        default  => "${hadoop::params::hadoop_tmp_path}/nm-local-dir",
+    }
+
+    $yarn_nodemanager_logdirs = $::hostname ? {
+        default  => "${hadoop::params::hadoop_tmp_path}/userlogs",
+    }
+
 }
