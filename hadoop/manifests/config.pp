@@ -75,7 +75,15 @@ class hadoop::config{
         user =>  "${hadoop::params::hdadm}",
         path    => ["/bin", "/usr/bin", "/usr/sbin" ],
         onlyif =>"test ${hadoop::params::master} = $(facter hostname) -a ! -d ${hadoop::params::namedir}/current",
-        require => [File["hadoop-name-dir"],File["hadoop-data-dir"]],
+        require => [
+                    File["hadoop-name-dir"],
+                    File["hadoop-data-dir"],
+                    File["hadoop-config"],
+                    File["hadoop-env"],
+                    File["slaves"],
+                    File["hdfs-site-xml"],
+                    File["core-site-xml"],
+                    ],
     }
 
     file {"${hadoop::params::hadoop_current}/etc/hadoop/mapred-site.xml":

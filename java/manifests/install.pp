@@ -7,18 +7,19 @@ class java::install{
         owner => "root",
         group => "root",
         alias => "java-base",
-        before => Exec["download-java"],
+#        before => Exec["download-java"],
+        before => File["java-source-tgz"],
     }
 
-    exec { "download jdk${java::params::java_version}.tar.gz":
-        command => "curl -L '${java::params::jdk_url}' -H 'Cookie: oraclelicense=accept-securebackup-cookie' -o jdk${java::params::java_version}.tar.gz",
-        cwd => "${java::params::java_base}",
-        alias => "download-java",
-        before => Exec["untar-java"],
-        path    => ["/bin", "/usr/bin", "/usr/sbin"],
-        #onlyif => "test -d ${java::params::java_base}/jdk${java::params::java_version}",
-        creates => "${java::params::java_base}/jdk${java::params::java_version}.tar.gz",
-    }
+
+#    exec { "download jdk${java::params::java_version}.tar.gz":
+#        command => "curl -L '${java::params::jdk_url}' -H 'Cookie: oraclelicense=accept-securebackup-cookie' -o jdk${java::params::java_version}.tar.gz",
+#        cwd => "${java::params::java_base}",
+#        alias => "download-java",
+#        before => Exec["untar-java"],
+#        path    => ["/bin", "/usr/bin", "/usr/sbin"],
+#        creates => "${java::params::java_base}/jdk${java::params::java_version}.tar.gz",
+#    }
 
     file { "${java::params::java_base}/jdk${java::params::java_version}.tar.gz":
         mode => 0644,
@@ -27,7 +28,9 @@ class java::install{
         group => "root",
         alias => "java-source-tgz",
         before => Exec["untar-java"],
-        require => [File["java-base"], Exec["download-java"]],
+        source => "puppet:///modules/java/tarball/jdk${java::params::java_version}.tar.gz",
+        #require => [File["java-base"], Exec["download-java"]],
+        require => File["java-base"],
     }
 
     exec { "untar jdk${java::params::java_version}.tar.gz":
