@@ -8,17 +8,19 @@ class hadoop{
         owner => "${hadoop::params::hdadm}",
         group => "${hadoop::params::hdgrp}",
         alias => "hadoop-base",
-        before => Exec["download-hadoop"],
+        before => File["hadoop-source-tgz"],
+        #before => Exec["download-hadoop"],
     }
   
-    exec { "download ${hadoop::params::hadoop_version}.tar.gz":
-        command => "wget ${hadoop::params::hadoop_url}",
-        cwd => "${hadoop::params::hadoop_base}",
-        alias => "download-hadoop",
-        before => Exec["untar-hadoop"],
-        path    => ["/bin", "/usr/bin", "/usr/sbin"],
-        creates => "${hadoop::params::hadoop_base}/${hadoop::params::hadoop_version}.tar.gz",
-    }
+    
+    #exec { "download ${hadoop::params::hadoop_version}.tar.gz":
+    #    command => "wget ${hadoop::params::hadoop_url}",
+    #    cwd => "${hadoop::params::hadoop_base}",
+    #    alias => "download-hadoop",
+    #    before => Exec["untar-hadoop"],
+    #    path    => ["/bin", "/usr/bin", "/usr/sbin"],
+    #    creates => "${hadoop::params::hadoop_base}/${hadoop::params::hadoop_version}.tar.gz",
+    #}
 
     file { "${hadoop::params::hadoop_base}/${hadoop::params::hadoop_version}.tar.gz":
         mode => 0644,
@@ -27,7 +29,9 @@ class hadoop{
         group => "${hadoop::params::hdgrp}",
         alias => "hadoop-source-tgz",
         before => Exec["untar-hadoop"],
-        require => [File["hadoop-base"], Exec["download-hadoop"]],
+        source => "puppet:///modules/hadoop/tarball/${hadoop::params::hadoop_version}.tar.gz",
+        require => File["hadoop-base"], 
+        #require => [File["hadoop-base"], Exec["download-hadoop"]],
     }
 
 
