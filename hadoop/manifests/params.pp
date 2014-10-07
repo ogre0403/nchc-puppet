@@ -16,7 +16,7 @@ class hadoop::params{
     
     $hadoop_version = $::hostname ? {
        default => "hadoop-2.0.0-cdh4.7.0",
-       default => "hadoop-2.3.0-cdh5.0.2",
+       #default => "hadoop-2.3.0-cdh5.0.2",
     }
 
     $hadoop_url = $::hostname ? {
@@ -72,7 +72,7 @@ class hadoop::params{
         default  => "8030",
     }
 
-    $rourcemanager_port = $::hostname ? {
+    $resourcemanager_port = $::hostname ? {
         default  => "8032",
     }
 
