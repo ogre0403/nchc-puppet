@@ -124,5 +124,7 @@ export HADOOP_CONF_DIR=$HADOOP_HOME/etc/hadoop                  # SET_HADOOP_VAR
 export YARN_CONF_DIR=$HADOOP_HOME/etc/hadoop                    # SET_HADOOP_VAR_BY_PUPPET
 export PATH=$PATH:$HADOOP_HOME/bin:$HADOOP_HOME/sbin            # SET_HADOOP_VAR_BY_PUPPET
 
-
+#HBase
+export HBASE_HOME=<%= scope.lookupvar('nchc_hbase::params::hbase_current') %>  #SET_HBASE_VAR_BY_PUPPET
+export PATH=$PATH:$HBASE_HOME/bin                                           #SET_HBASE_VAR_BY_PUPPET
 

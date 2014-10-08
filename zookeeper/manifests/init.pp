@@ -64,19 +64,35 @@ class zookeeper ($server_id) {
     exec { "mkdir ${zookeeper::params::zk_data_path}":
         command => "mkdir -p ${zookeeper::params::zk_data_path}",
         cwd => "${zookeeper::params::zk_base}/",
-        alias => "zk-data-dir",
+        alias => "create-zk-data-dir",
         path   => ["/bin", "/usr/bin", "/usr/sbin"],
         onlyif => "test ! -d ${zookeeper::params::zk_data_path}",
         require => File["zk-app-dir"],
     }
 
+    file { "${zookeeper::params::zk_data_path}":
+        ensure => "directory",
+        owner => "${hadoop::params::hdadm}",
+        group => "${hadoop::params::hdgrp}",
+        alias => "zk-data-dir",
+        require => Exec["create-zk-data-dir"],
+    }
+
     exec { "mkdir ${zookeeper::params::zk_log_path}":
         command => "mkdir -p ${zookeeper::params::zk_log_path}",
         cwd => "${zookeeper::params::zk_base}/",
-        alias => "zk-log-dir",
+        alias => "create-zk-log-dir",
         path   => ["/bin", "/usr/bin", "/usr/sbin"],
         onlyif => "test ! -d ${zookeeper::params::zk_log_path}",
         require => File["zk-app-dir"],
+    }
+
+    file { "${zookeeper::params::zk_log_path}":
+        ensure => "directory",
+        owner => "${hadoop::params::hdadm}",
+        group => "${hadoop::params::hdgrp}",
+        alias => "zk-log-dir",
+        require => Exec["create-zk-log-dir"],
     }
     
     file { "${zookeeper::params::zk_base}/${zookeeper::params::zk_version}/conf/zoo.cfg":

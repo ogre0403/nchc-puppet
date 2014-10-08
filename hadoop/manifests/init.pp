@@ -2,6 +2,7 @@
 
 class hadoop{
     include hadoop::params
+    include nchc_hbase::params
     
     file {"$hadoop::params::hadoop_base":
         ensure => "directory",
