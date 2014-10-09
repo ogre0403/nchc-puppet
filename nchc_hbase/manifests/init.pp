@@ -4,6 +4,7 @@ class nchc_hbase {
 
     require nchc_hbase::params
     require hadoop::params
+    require zookeeper::params
     
 
     file {"$nchc_hbase::params::hbase_base":
