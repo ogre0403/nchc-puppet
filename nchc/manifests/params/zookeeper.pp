@@ -1,17 +1,38 @@
-# /etc/puppet/modules/java/manifests/params.pp
+# /etc/puppet/modules/zookeeper/manafests/init.pp
 
-class nchc::params::zookeeper {
+class nchc::params::zookeeper{
 
-        $java_version = $::hostname ? {
-            default	=> "1.7.0_51",
-        }
-        $java_base = $::hostname ? {
-            default     => "/opt/java_version",
-        }
-        $java_current = $::hostname ? {
-            default     => "/opt/java",
-        }
-        $jdk_url = $::hostname ? {
-            default => "http://download.oracle.com/otn-pub/java/jdk/7u51-b13/jdk-7u51-linux-x64.tar.gz",
-        }
+    $zkadm = $::hostname ? {
+       default => "vagrant",
+    }
+
+    $zkgrp = $::hostname ? {
+       default => "vagrant",
+    }
+
+    $zk_version = $::hostname ? {
+       default => "zookeeper-3.4.5-cdh4.7.0",
+    }
+
+    $zk_base = $::hostname ? {
+        default     => "/opt/zookeeper_version",
+    }
+
+    $zk_current = $::hostname ? {
+        default     => "/opt/zookeeper",
+    }
+ 
+    $zk_data_path = $::hostname ? {
+        default     => "/tmp/zookeeper/data",
+    }
+
+    $zk_log_path = $::hostname ? {
+        default     => "/tmp/zookeeper/log",
+    }
+
+    $zk_servers = $::hostname ? {
+        default         => ["NN"] 
+    }
+
+    
 }
