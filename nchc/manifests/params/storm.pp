@@ -2,6 +2,14 @@
 
 class nchc::params::storm {
 
+    $storm_adm = $::hostname ? {
+        default => "vagrant",
+    }          
+
+    $storm_grp = $::hostname ? {
+        default => "vagrant",
+    }
+          
     $storm_version = $::hostname ? {
         default => "apache-storm-0.9.2-incubating",
     }          
@@ -15,7 +23,7 @@ class nchc::params::storm {
     }          
     
     $storm_nimbus = $::hostname ? {
-        default => "NN-agent",
+        default => "NN",
     }          
     
     $storm_supervisor = $::hostname ? {
@@ -27,6 +35,6 @@ class nchc::params::storm {
     }          
     
     $storm_zk_server = $::hostname ? {
-        default => ["NN-agent"],
+        default => ["NN"],
     }          
 }

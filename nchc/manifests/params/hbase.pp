@@ -1,17 +1,32 @@
-# /etc/puppet/modules/java/manifests/params.pp
+# /etc/puppet/modules/nchc-hbase/manafests/params.pp
 
 class nchc::params::hbase {
+    $hbase_version = $::hostname ? {
+       default => "hbase-0.94.15-cdh4.7.0",
+    }
 
-        $java_version = $::hostname ? {
-            default	=> "1.7.0_51",
-        }
-        $java_base = $::hostname ? {
-            default     => "/opt/java_version",
-        }
-        $java_current = $::hostname ? {
-            default     => "/opt/java",
-        }
-        $jdk_url = $::hostname ? {
-            default => "http://download.oracle.com/otn-pub/java/jdk/7u51-b13/jdk-7u51-linux-x64.tar.gz",
-        }
+    $hbase_base = $::hostname ? {
+        default     => "/opt/hbase_version",
+    }
+
+    $hbase_current = $::hostname ? {
+        default     => "/opt/hbase",
+    }
+
+    $hbase_master = $::hostname ? {
+        default     => ["NN-agent"]
+    }
+
+    $hbase_regionservers = $::hostname ? {
+        default     => ["DN1-agent"]
+    }
+
+    $zookeeper_quorum = $::hostname ? {
+        default     => ["NN-agent"],
+    }
+ 
+    $hbase_dir = $::hostname ? {
+        default     => "hbase",
+    }
+
 }
