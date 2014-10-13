@@ -109,6 +109,9 @@ if ! shopt -oq posix; then
   fi
 fi
 
+#maven
+export PATH=$PATH:<%= scope.lookupvar('nchc::params::maven::mvn_current') %>/bin        #SET_MVN_VAR_BY_PUPPET
+
 #JVM
 export JAVA_HOME=<%= scope.lookupvar('nchc::params::java::java_current') %>              # SET_JAVA_VAR_BY_PUPPET
 export PATH=$PATH:$JAVA_HOME/bin        # SET_JAVA_VAR_BY_PUPPET
@@ -135,5 +138,5 @@ export STORM_HOME=<%= scope.lookupvar('nchc::params::storm::storm_current') %>  
 export PATH=$PATH:$STORM_HOME/bin                                           #SET_STORM_VAR_BY_PUPPET
 
 #Zookeeper
-export ZK_HOME=<%= scope.lookupvar('nchc::params::zookeeper::zk_current') %>  #SET_Zk_VAR_BY_PUPPET
+export ZK_HOME=<%= scope.lookupvar('nchc::params::zookeeper::zk_current') %>  #SET_ZK_VAR_BY_PUPPET
 export PATH=$PATH:$ZK_HOME/bin                                           #SET_ZK_VAR_BY_PUPPET

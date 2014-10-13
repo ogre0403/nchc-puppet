@@ -6,6 +6,7 @@ class nchc::params::bashrc (
 )
 {
     include nchc::params::java
+    include nchc::params::maven
     include nchc::params::hadoop
     include nchc::params::hbase
     include nchc::params::zookeeper
