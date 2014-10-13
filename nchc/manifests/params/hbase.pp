@@ -3,11 +3,11 @@
 class nchc::params::hbase {
 
     $hbase_adm = $::hostname ? {
-       default => "vagrant",
+       default => "hdadm",
     }
 
     $hbase_grp = $::hostname ? {
-       default => "vagrant",
+       default => "hdadm",
     }
 
     $hbase_jdk = $::hostname ? {
@@ -15,7 +15,7 @@ class nchc::params::hbase {
     }
 
     $hbase_hdfs = $::hostname ? {
-       default => "NN",
+       default => "NN-agent",
     }
 
     $hbase_hdfsport = $::hostname ? {
@@ -35,15 +35,15 @@ class nchc::params::hbase {
     }
 
     $hbase_master = $::hostname ? {
-        default     => ["NN"]
+        default     => ["NN-agent"]
     }
 
     $hbase_regionservers = $::hostname ? {
-        default     => ["DN1"]
+        default     => ["DN1-agent"]
     }
 
     $zookeeper_quorum = $::hostname ? {
-        default     => ["NN"],
+        default     => ["NN-agent"],
     }
  
     $hbase_dir = $::hostname ? {

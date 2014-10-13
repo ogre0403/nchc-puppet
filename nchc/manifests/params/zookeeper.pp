@@ -3,11 +3,11 @@
 class nchc::params::zookeeper{
 
     $zkadm = $::hostname ? {
-       default => "vagrant",
+       default => "hdadm",
     }
 
     $zkgrp = $::hostname ? {
-       default => "vagrant",
+       default => "hdadm",
     }
 
     $zk_version = $::hostname ? {
@@ -23,15 +23,15 @@ class nchc::params::zookeeper{
     }
  
     $zk_data_path = $::hostname ? {
-        default     => "/tmp/zookeeper/data",
+        default     => "/opt/zookeeper_dir/data",
     }
 
     $zk_log_path = $::hostname ? {
-        default     => "/tmp/zookeeper/log",
+        default     => "/opt/zookeeper_dir/log",
     }
 
     $zk_servers = $::hostname ? {
-        default         => ["NN"] 
+        default         => ["NN-agent"] 
     }
 
     

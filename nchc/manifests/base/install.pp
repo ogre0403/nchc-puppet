@@ -1,8 +1,8 @@
 # /etc/puppet/modules/vagrant_base/manifests/init.pp
 
 class nchc::base::install(
-        $user = 'vagrant', 
-        $group = 'vagrant', 
+        $user = 'hdadm', 
+        $group = 'hdadm', 
     ) {
 
     user { "${user}":

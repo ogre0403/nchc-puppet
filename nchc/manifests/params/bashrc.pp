@@ -1,8 +1,8 @@
 #/etc/puppet/modules/nchc/manifests/params/storm.pp
 
 class nchc::params::bashrc (
-    $user = "vagrant",
-    $group = "vagrant"
+    $user = "hdadm",
+    $group = "hdadm"
 )
 {
     include nchc::params::java

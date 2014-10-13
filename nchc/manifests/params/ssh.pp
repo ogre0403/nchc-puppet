@@ -3,11 +3,11 @@
 class nchc::params::ssh {
 
     $user = $::hostname ? {
-        default => "vagrant",
+        default => "hdadm",
     }          
 
     $group = $::hostname ? {
-        default => "vagrant",
+        default => "hdadm",
     }          
 
     $auto_login = $::hostname ? {

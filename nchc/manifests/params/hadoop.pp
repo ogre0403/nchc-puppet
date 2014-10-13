@@ -3,11 +3,11 @@
 class nchc::params::hadoop{
 
     $hdadm = $::hostname ? {
-        default => "vagrant",
+        default => "hdadm",
     }
 
     $hdgrp = $::hostname ? {
-        default => "vagrant",
+        default => "hdadm",
     }
 
     $hadoop_jdk = $::hostname ? {
@@ -33,12 +33,12 @@ class nchc::params::hadoop{
 
     #slaves
     $slaves = $::hostname ? {
-        default  => ["DN1"],
+        default  => ["DN1-agent"],
     }
 
     # core-site.xml
     $master = $::hostname ? {
-        default  => "NN",
+        default  => "NN-agent",
     }
 
     $hdfsport = $::hostname ? {
@@ -46,7 +46,7 @@ class nchc::params::hadoop{
     }
 
     $hadoop_tmp_path = $::hostname ? {
-        default  => "/tmp/hadoop",
+        default  => "/opt/hadoop_dir",
     }
     
     # hdfs-site.xml

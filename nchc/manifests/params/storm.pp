@@ -3,11 +3,11 @@
 class nchc::params::storm {
 
     $storm_adm = $::hostname ? {
-        default => "vagrant",
+        default => "hdadm",
     }          
 
     $storm_grp = $::hostname ? {
-        default => "vagrant",
+        default => "hdadm",
     }
           
     $storm_version = $::hostname ? {
@@ -23,7 +23,7 @@ class nchc::params::storm {
     }          
     
     $storm_nimbus = $::hostname ? {
-        default => "NN",
+        default => "NN-agent",
     }          
     
     $storm_supervisor = $::hostname ? {
@@ -31,10 +31,10 @@ class nchc::params::storm {
     }          
     
     $storm_local_dir = $::hostname ? {
-        default => "/tmp/storm",
+        default => "/opt/storm_dir",
     }          
     
     $storm_zk_server = $::hostname ? {
-        default => ["NN"],
+        default => ["NN-agent"],
     }          
 }
