@@ -136,7 +136,11 @@ export PATH=$PATH:$HBASE_HOME/bin                                           #SET
 #storm
 export STORM_HOME=<%= scope.lookupvar('nchc::params::storm::storm_current') %>  #SET_STORM_VAR_BY_PUPPET
 export PATH=$PATH:$STORM_HOME/bin                                           #SET_STORM_VAR_BY_PUPPET
+<% if scope.lookupvar('nchc::params::storm::storm_on_yarn') == "yes" %>
+export PATH=$PATH:<%= scope.lookupvar('nchc::params::storm::storm_on_yarn_dir') %>/bin      #SET_STORM_VAR_BY_PUPPET
+<% end %>
 
 #Zookeeper
 export ZK_HOME=<%= scope.lookupvar('nchc::params::zookeeper::zk_current') %>  #SET_ZK_VAR_BY_PUPPET
 export PATH=$PATH:$ZK_HOME/bin                                           #SET_ZK_VAR_BY_PUPPET
+

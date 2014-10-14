@@ -37,4 +37,12 @@ class nchc::params::storm {
     $storm_zk_server = $::hostname ? {
         default => ["NN-agent"],
     }          
+
+    $storm_on_yarn = $::hostname ? {
+        default => "yes",
+    }          
+
+    $storm_on_yarn_dir = $::hostname ? {
+        default => "${storm_base}/storm-yarn",
+    }          
 }

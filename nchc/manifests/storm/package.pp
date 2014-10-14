@@ -58,4 +58,39 @@ class nchc::storm::package {
         require => File["storm-app-dir"],
     }
 
+    if $nchc::params::storm::storm_on_yarn == "yes"{
+        file { "${nchc::params::storm::storm_base}/storm-yarn-CDH.tar.gz":
+            ensure => present,
+            owner => "${nchc::params::storm::storm_adm}",
+            group => "${nchc::params::storm::storm_grp}",
+            alias => "storm-yarn-tgz",
+            before => Exec["untar-storm-yarn"],
+            source => "puppet:///modules/nchc/storm/tarball/storm-yarn-CDH.tar.gz",
+            require => File["storm-base"],
+        }
+
+        exec { "untar storm-yarn-CDH.tar.gz":
+            command => "tar xfvz storm-yarn-CDH.tar.gz",
+            cwd => "${nchc::params::storm::storm_base}",
+            creates => "${nchc::params::storm::storm_base}/storm-yarn",
+            alias => "untar-storm-yarn",
+            user => "root",
+            onlyif => "test 0 -eq $(ls -al ${nchc::params::storm::storm_base}/storm-yarn | grep -c bin)",
+            path   => ["/bin", "/usr/bin", "/usr/sbin"],
+            require => File["storm-yarn-tgz"],
+        }
+    }elsif $nchc::params::storm::storm_on_yarn == "no"{
+    
+        file { "${nchc::params::storm::storm_base}/storm-yarn-CDH.tar.gz":
+            ensure => absent,
+        }
+
+        file { "${nchc::params::storm::storm_base}/storm-yarn":
+            ensure => absent,
+            recurse => true,
+            purge => true,
+            force => true,
+        }
+    }
+
 }
