@@ -2,15 +2,18 @@
 
 class nchc::base::install(
         $user = 'hdadm', 
-        $group = 'hdadm', 
+        $group = 'hdadm',
+        $password = 'hadoop',
     ) {
+
+
 
     user { "${user}":
         ensure     => "present",
         managehome => true,
         shell  => "/bin/bash",
+        password => generate('/bin/sh', '-c', "mkpasswd -m sha-512 ${password} | tr -d '\n'"),
     }
-
  
     $vim = $operatingsystem ? {
       centos                => 'vim-enhanced.x86_64',
