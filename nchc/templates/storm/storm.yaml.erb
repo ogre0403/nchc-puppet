@@ -22,7 +22,11 @@ storm.zookeeper.servers:
 <% end -%>
 # 
 storm.local.dir: "<%= scope.lookupvar('nchc::params::storm::storm_local_dir') %>"
+
+<% if scope.lookupvar('nchc::params::storm::storm_on_yarn') == "no" %>
 nimbus.host: "<%= scope.lookupvar('nchc::params::storm::storm_nimbus') %>"
+<% end %>
+
 supervisor.slots.ports: 
 <% server_id = 0 -%>
 <% scope.lookupvar('nchc::params::storm::storm_supervisor').each do |var| -%>

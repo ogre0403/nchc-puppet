@@ -15,8 +15,8 @@ class nchc::params::hadoop{
     }
 
     $hadoop_version = $::hostname ? {
-       default => "hadoop-2.0.0-cdh4.7.0",
-       #default => "hadoop-2.3.0-cdh5.0.2",
+       #default => "hadoop-2.0.0-cdh4.7.0",
+       default => "hadoop-2.3.0-cdh5.0.2",
     }
 
     $hadoop_url = $::hostname ? {
@@ -33,12 +33,12 @@ class nchc::params::hadoop{
 
     #slaves
     $slaves = $::hostname ? {
-        default  => ["DN1-agent"],
+        default  => ["DN1","DN2"],
     }
 
     # core-site.xml
     $master = $::hostname ? {
-        default  => "NN-agent",
+        default  => "NN",
     }
 
     $hdfsport = $::hostname ? {
@@ -51,7 +51,7 @@ class nchc::params::hadoop{
     
     # hdfs-site.xml
     $replica_factor = $::hostname ? {
-        default  => "1",
+        default  => "2",
     }
 
     $namedir = $::hostname ? {

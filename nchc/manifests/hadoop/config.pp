@@ -8,7 +8,7 @@ class nchc::hadoop::config{
         group => "${nchc::params::hadoop::hdgrp}",
         mode => "664",
         alias => "core-site-xml",
-        content => template("nchc/hadoop/core-site.xml.erb"),
+        content => template("nchc/hadoop/${nchc::params::hadoop::hadoop_version}/core-site.xml.erb"),
     }
 
     file {"${nchc::params::hadoop::hadoop_tmp_path}":
@@ -24,7 +24,7 @@ class nchc::hadoop::config{
         group => "${nchc::params::hadoop::hdgrp}",
         mode => "664",
         alias => "hdfs-site-xml",
-        content => template("nchc/hadoop/hdfs-site.xml.erb"),
+        content => template("nchc/hadoop/${nchc::params::hadoop::hadoop_version}/hdfs-site.xml.erb"),
     }
 
     file {"${nchc::params::hadoop::namedir}":
@@ -48,7 +48,7 @@ class nchc::hadoop::config{
         group => "${nchc::params::hadoop::hdgrp}",
         mode => "664",
         alias => "slaves",
-        content => template("nchc/hadoop/slaves.erb"),
+        content => template("nchc/hadoop/${nchc::params::hadoop::hadoop_version}/slaves.erb"),
     }
 
     file {"${nchc::params::hadoop::hadoop_current}/etc/hadoop/hadoop-env.sh":
@@ -56,7 +56,7 @@ class nchc::hadoop::config{
         group => "${nchc::params::hadoop::hdgrp}",
         mode => "664",
         alias => "hadoop-env",
-        content => template("nchc/hadoop/hadoop-env.sh.erb"),
+        content => template("nchc/hadoop/${nchc::params::hadoop::hadoop_version}/hadoop-env.sh.erb"),
     }
 
     file {"${nchc::params::hadoop::hadoop_current}/libexec/hadoop-config.sh":
@@ -64,7 +64,7 @@ class nchc::hadoop::config{
         group => "${nchc::params::hadoop::hdgrp}",
         mode => "664",
         alias => "hadoop-config",
-        content => template("nchc/hadoop/hadoop-config.sh.erb"),
+        content => template("nchc/hadoop/${nchc::params::hadoop::hadoop_version}/hadoop-config.sh.erb"),
     }
 
 
@@ -91,7 +91,7 @@ class nchc::hadoop::config{
         group => "${nchc::params::hadoop::hdgrp}",
         mode => "664",
         alias => "mapred-site-xml",
-        content => template("nchc/hadoop/mapred-site.xml.erb"),
+        content => template("nchc/hadoop/${nchc::params::hadoop::hadoop_version}/mapred-site.xml.erb"),
     }
 
     file {"${nchc::params::hadoop::hadoop_current}/etc/hadoop/yarn-site.xml":
@@ -99,7 +99,7 @@ class nchc::hadoop::config{
         group => "${nchc::params::hadoop::hdgrp}",
         mode => "664",
         alias => "yarn-site-xml",
-        content => template("nchc/hadoop/yarn-site.xml.erb"),
+        content => template("nchc/hadoop/${nchc::params::hadoop::hadoop_version}/yarn-site.xml.erb"),
     }
 
     file {"${nchc::params::hadoop::yarn_nodemanager_localdirs}":

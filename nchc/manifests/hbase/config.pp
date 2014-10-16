@@ -13,7 +13,7 @@ class nchc::hbase::config {
         group => "${nchc::params::hbase::hbase_grp}",
         alias => "RS",
         require => File["hbase-app-dir"],
-        content => template("nchc/hbase/regionservers.erb"),
+        content => template("nchc/hbase/${nchc::params::hbase::hbase_version}/regionservers.erb"),
     }
 
     file { "${nchc::params::hbase::hbase_base}/${nchc::params::hbase::hbase_version}/conf/hbase-env.sh":
@@ -21,7 +21,7 @@ class nchc::hbase::config {
         group => "${nchc::params::hbase::hbase_grp}",
         alias => "hbase-env",
         require => File["hbase-app-dir"],
-        content => template("nchc/hbase/hbase-env.sh.erb"),
+        content => template("nchc/hbase/${nchc::params::hbase::hbase_version}/hbase-env.sh.erb"),
     }
 
     file { "${nchc::params::hbase::hbase_base}/${nchc::params::hbase::hbase_version}/conf/hbase-site.xml":
@@ -29,7 +29,7 @@ class nchc::hbase::config {
         group => "${nchc::params::hbase::hbase_grp}",
         alias => "hbase-site",
         require => File["hbase-app-dir"],
-        content => template("nchc/hbase/hbase-site.xml.erb"),
+        content => template("nchc/hbase/${nchc::params::hbase::hbase_version}/hbase-site.xml.erb"),
     }
 
 }
