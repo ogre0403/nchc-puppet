@@ -39,7 +39,7 @@ class nchc::params::storm {
     }          
 
     $storm_on_yarn = $::hostname ? {
-        default => "yes",
+        default => "no",
     }          
 
     $storm_on_yarn_dir = $::hostname ? {

@@ -15,8 +15,8 @@ class nchc::params::hadoop{
     }
 
     $hadoop_version = $::hostname ? {
-       #default => "hadoop-2.0.0-cdh4.7.0",
-       default => "hadoop-2.3.0-cdh5.0.2",
+       default => "hadoop-2.0.0-cdh4.7.0",
+       #default => "hadoop-2.3.0-cdh5.0.2",
     }
 
     $hadoop_url = $::hostname ? {
@@ -33,12 +33,12 @@ class nchc::params::hadoop{
 
     #slaves
     $slaves = $::hostname ? {
-        default  => ["DN1","DN2"],
+        default  => ["DN1-agent","DN2-agent"],
     }
 
     # core-site.xml
     $master = $::hostname ? {
-        default  => "NN",
+        default  => "NN-agent",
     }
 
     $hdfsport = $::hostname ? {
@@ -55,11 +55,11 @@ class nchc::params::hadoop{
     }
 
     $namedir = $::hostname ? {
-        default  => "${hadoop_tmp_path}/name",
+        default  => ["${hadoop_tmp_path}/name1","${hadoop_tmp_path}/name2"],
     }
 
     $datadir = $::hostname ? {
-        default  => "${hadoop_tmp_path}/data",
+        default  => ["${hadoop_tmp_path}/data1","${hadoop_tmp_path}/data2"],
     }
 
     #yarn-site.pp
@@ -76,16 +76,45 @@ class nchc::params::hadoop{
         default  => "8032",
     }
 
-    $nodemanager_port = $::hostname ? {
-        default  => "8034",
+    $resourcemanager_adminport = $::hostname ? {
+        default  => "8033",
     }
 
+    $resourcemanager_webport = $::hostname ? {
+        default  => "8088",
+    }
+
+
     $yarn_nodemanager_localdirs = $::hostname ? {
-        default  => "${hadoop_tmp_path}/nm-local-dir",
+        default  => ["${hadoop_tmp_path}/nm-local-dir"],
     }
 
     $yarn_nodemanager_logdirs = $::hostname ? {
-        default  => "${hadoop_tmp_path}/userlogs",
+        default  => ["${hadoop_tmp_path}/userlogs"],
+    }
+
+    $yarn_remote_logdirs = $::hostname ? {
+        default  => "/var/log/hadoop-yarn/apps",
+    }
+
+    $yarn_rm_mem = $::hostname ? {
+        default  => "768",
+    }
+
+    $yarn_schedule_min = $::hostname ? {
+        default  => "256",
+    }
+
+    $yarn_schedule_max = $::hostname ? {
+        default  => "768",
+    }
+
+    $yarn_mr_am = $::hostname ? {
+        default  => "256",
+    }
+
+    $yarn_mr_am_opt = $::hostname ? {
+        default  => "200m",
     }
 
 }

@@ -27,19 +27,17 @@ class nchc::hadoop::config{
         content => template("nchc/hadoop/${nchc::params::hadoop::hadoop_version}/hdfs-site.xml.erb"),
     }
 
-    file {"${nchc::params::hadoop::namedir}":
+    file {$nchc::params::hadoop::namedir:
         ensure => "directory",
         owner => "${nchc::params::hadoop::hdadm}",
         group => "${nchc::params::hadoop::hdgrp}",
-        alias => "hadoop-name-dir",
         require => File["hadoop-tmp-dir"],
      }
 
-    file {"${nchc::params::hadoop::datadir}":
+    file {$nchc::params::hadoop::datadir:
         ensure => "directory",
         owner => "${nchc::params::hadoop::hdadm}",
         group => "${nchc::params::hadoop::hdgrp}",
-        alias => "hadoop-data-dir",
         require => File["hadoop-tmp-dir"],
     }
 
@@ -76,8 +74,8 @@ class nchc::hadoop::config{
         path    => ["/bin", "/usr/bin", "/usr/sbin" ],
         onlyif =>"test ${nchc::params::hadoop::master} = $(facter hostname) -a ! -d ${nchc::params::hadoop::namedir}/current",
         require => [
-                    File["hadoop-name-dir"],
-                    File["hadoop-data-dir"],
+                    File[$nchc::params::hadoop::namedir],
+                    File[$nchc::params::hadoop::datadir],
                     File["hadoop-config"],
                     File["hadoop-env"],
                     File["slaves"],
@@ -102,19 +100,19 @@ class nchc::hadoop::config{
         content => template("nchc/hadoop/${nchc::params::hadoop::hadoop_version}/yarn-site.xml.erb"),
     }
 
-    file {"${nchc::params::hadoop::yarn_nodemanager_localdirs}":
+    file {$nchc::params::hadoop::yarn_nodemanager_localdirs:
         ensure => "directory",
         owner => "${nchc::params::hadoop::hdadm}",
         group => "${nchc::params::hadoop::hdgrp}",
-        alias => "yarn-nm-localdir",
+        #alias => "yarn-nm-localdir",
         require => File["hadoop-tmp-dir"],
     }
 
-    file {"${nchc::params::hadoop::yarn_nodemanager_logdirs}":
+    file {$nchc::params::hadoop::yarn_nodemanager_logdirs:
         ensure => "directory",
         owner => "${nchc::params::hadoop::hdadm}",
         group => "${nchc::params::hadoop::hdgrp}",
-        alias => "yarn-nm-logdir",
+        #alias => "yarn-nm-logdir",
         require => File["hadoop-tmp-dir"],
     }
 }
