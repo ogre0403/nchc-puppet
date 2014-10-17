@@ -127,7 +127,7 @@ class nchc::hadoop::config{
         }
     } 
 
-    if $nchc::params::hadoop::qjm_ha_mode == "yes" {
+    if $nchc::params::hadoop::qjm_ha_mode == "yes" and "${nchc::params::hadoop::master}" == "$::hostname" {
         file {"/tmp/format_HA_NN.sh":
             owner => "${nchc::params::hadoop::hdadm}",
             group => "${nchc::params::hadoop::hdgrp}",
@@ -154,6 +154,15 @@ class nchc::hadoop::config{
             path    => ["/bin", "/usr/bin", "/usr/sbin","/tmp" ],
             onlyif =>"test ${nchc::params::hadoop::master} = $(facter hostname) -a ! -d ${nchc::params::hadoop::namedir}/current",
             require => File["HA-NN-sh"],
+        }
+
+        exec { " remove HA format script ":
+            command => "rm /tmp/format_HA_NN.sh",
+            cwd => "/tmp",
+            user => "${nchc::params::hadoop::hdadm}",
+            path    => ["/bin", "/usr/bin", "/usr/sbin"],
+            require => Exec["format-HA-NN"],
+            onlyif =>"test -e /tmp/format_HA_NN.sh",
         }
     }
 
