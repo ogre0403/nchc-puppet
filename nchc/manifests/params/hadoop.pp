@@ -63,6 +63,9 @@ class nchc::params::hadoop{
     }
 
     #yarn-site.pp
+    $resourcemanager = $::hostname ? {
+        default  => "${master}",
+    }
     
     $resource_tracker_port = $::hostname ? {
         default  => "8031",

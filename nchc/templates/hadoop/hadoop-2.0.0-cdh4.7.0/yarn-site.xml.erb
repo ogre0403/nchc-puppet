@@ -27,19 +27,19 @@
 
     <property>
         <name>yarn.resourcemanager.address</name>
-        <value><%= scope.lookupvar('nchc::params::hadoop::master') %>:<%= scope.lookupvar('nchc::params::hadoop::resourcemanager_port') %></value>
+        <value><%= scope.lookupvar('nchc::params::hadoop::resourcemanager') %>:<%= scope.lookupvar('nchc::params::hadoop::resourcemanager_port') %></value>
     </property>
     <property>
         <name>yarn.resourcemanager.scheduler.address</name>
-        <value><%= scope.lookupvar('nchc::params::hadoop::master') %>:<%= scope.lookupvar('nchc::params::hadoop::scheduler_port') %></value>
+        <value><%= scope.lookupvar('nchc::params::hadoop::resourcemanager') %>:<%= scope.lookupvar('nchc::params::hadoop::scheduler_port') %></value>
     </property>
     <property>
         <name>yarn.resourcemanager.resource-tracker.address</name>
-        <value><%= scope.lookupvar('nchc::params::hadoop::master') %>:<%= scope.lookupvar('nchc::params::hadoop::resource_tracker_port') %></value>
+        <value><%= scope.lookupvar('nchc::params::hadoop::resourcemanager') %>:<%= scope.lookupvar('nchc::params::hadoop::resource_tracker_port') %></value>
     </property>
     <property>
         <name>yarn.resourcemanager.admin.address</name>
-        <value><%= scope.lookupvar('nchc::params::hadoop::master') %>:<%= scope.lookupvar('nchc::params::hadoop::resourcemanager_adminport') %></value>
+        <value><%= scope.lookupvar('nchc::params::hadoop::resourcemanager') %>:<%= scope.lookupvar('nchc::params::hadoop::resourcemanager_adminport') %></value>
     </property>
     <property>
         <name>yarn.resourcemanager.webapp.address</name>
