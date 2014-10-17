@@ -73,14 +73,6 @@ class nchc::hadoop::package{
         require => File["hadoop-app-dir"],
     }
 
-#    file { "set environment var in .bashrc":
-#        path => "/home/${hadoop::params::hdadm}/.bashrc",
-#        ensure => present,
-#        owner => "${hadoop::params::hdadm}",
-#        group => "${hadoop::params::hdgrp}",
-#        content => template("hadoop/bashrc.erb"),
-#        require => File["hadoop-link"],
-#    }
 
 }
 

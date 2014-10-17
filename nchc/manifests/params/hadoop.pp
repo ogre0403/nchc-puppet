@@ -51,15 +51,15 @@ class nchc::params::hadoop{
     
     # hdfs-site.xml
     $replica_factor = $::hostname ? {
-        default  => "2",
+        default  => "1",
     }
 
     $namedir = $::hostname ? {
-        default  => ["${hadoop_tmp_path}/name1","${hadoop_tmp_path}/name2"],
+        default  => ["${hadoop_tmp_path}/name1"],
     }
 
     $datadir = $::hostname ? {
-        default  => ["${hadoop_tmp_path}/data1","${hadoop_tmp_path}/data2"],
+        default  => ["${hadoop_tmp_path}/data1"],
     }
 
     #yarn-site.pp
@@ -84,7 +84,6 @@ class nchc::params::hadoop{
         default  => "8088",
     }
 
-
     $yarn_nodemanager_localdirs = $::hostname ? {
         default  => ["${hadoop_tmp_path}/nm-local-dir"],
     }
@@ -98,7 +97,7 @@ class nchc::params::hadoop{
     }
 
     $yarn_rm_mem = $::hostname ? {
-        default  => "768",
+        default  => "1024",
     }
 
     $yarn_schedule_min = $::hostname ? {
@@ -106,15 +105,37 @@ class nchc::params::hadoop{
     }
 
     $yarn_schedule_max = $::hostname ? {
-        default  => "768",
+        default  => "1024",
     }
 
     $yarn_mr_am = $::hostname ? {
-        default  => "256",
+        default  => "1024",
     }
 
     $yarn_mr_am_opt = $::hostname ? {
-        default  => "200m",
+        default  => "800m",
     }
 
+    $qjm_ha_mode = $::hostname ? {
+        default  => "yes",
+    }
+
+
+    if $qjm_ha_mode == "yes" {
+
+        $dfs_nameservices = "MYHDFS"
+        $standby_master = "NN"
+        $journalnodes = ["NN-agent", "DN1-agent", "DN2-agent" ]
+        $journal_data_dir = "${hadoop_tmp_path}/journaldata"
+        $zookeeper_quorum = ["NN-agent"]
+
+    } elsif $qjm_ha_mode == "no" {
+
+        $dfs_nameservices = undef
+        $standby_master = undef
+        $journalnodes = under
+        $journal_data_dir = undef
+        $zookeeper_quorum = undef
+    }
 }
+

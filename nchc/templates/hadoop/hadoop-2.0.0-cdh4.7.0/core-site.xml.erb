@@ -22,9 +22,23 @@
         <value><%= scope.lookupvar('nchc::params::hadoop::hadoop_tmp_path') %></value>
     </property>
     
+<% if scope.lookupvar('nchc::params::hadoop::qjm_ha_mode') == "no" %>
     <property>
         <name>fs.defaultFS</name>
         <value>hdfs://<%= scope.lookupvar('nchc::params::hadoop::master') %>:<%= scope.lookupvar('nchc::params::hadoop::hdfsport') %></value>
     </property>
+<% end %>
+
+<% if scope.lookupvar('nchc::params::hadoop::qjm_ha_mode') == "yes" %>
+    <property>
+        <name>fs.defaultFS</name>
+        <value>hdfs://<%= scope.lookupvar('nchc::params::hadoop::dfs_nameservices') %></value>
+    </property>
+    <property>
+        <name>ha.zookeeper.quorum</name>
+        <value><%= scope.lookupvar('nchc::params::hadoop::zookeeper_quorum').join(':2181,') %>:2181</value>
+    </property>
+<% end %>
+
 
 </configuration>

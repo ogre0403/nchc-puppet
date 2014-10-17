@@ -2,14 +2,7 @@
 
 class nchc::hadoop::config{
     include nchc::params::hadoop
-
-    file {"${nchc::params::hadoop::hadoop_current}/etc/hadoop/core-site.xml":
-        owner => "${nchc::params::hadoop::hdadm}",
-        group => "${nchc::params::hadoop::hdgrp}",
-        mode => "664",
-        alias => "core-site-xml",
-        content => template("nchc/hadoop/${nchc::params::hadoop::hadoop_version}/core-site.xml.erb"),
-    }
+    include nchc::params::zookeeper
 
     file {"${nchc::params::hadoop::hadoop_tmp_path}":
         ensure => "directory",
@@ -18,15 +11,6 @@ class nchc::hadoop::config{
         alias => "hadoop-tmp-dir",
      }
  
-
-    file {"${nchc::params::hadoop::hadoop_current}/etc/hadoop/hdfs-site.xml":
-        owner => "${nchc::params::hadoop::hdadm}",
-        group => "${nchc::params::hadoop::hdgrp}",
-        mode => "664",
-        alias => "hdfs-site-xml",
-        content => template("nchc/hadoop/${nchc::params::hadoop::hadoop_version}/hdfs-site.xml.erb"),
-    }
-
     file {$nchc::params::hadoop::namedir:
         ensure => "directory",
         owner => "${nchc::params::hadoop::hdadm}",
@@ -39,6 +23,29 @@ class nchc::hadoop::config{
         owner => "${nchc::params::hadoop::hdadm}",
         group => "${nchc::params::hadoop::hdgrp}",
         require => File["hadoop-tmp-dir"],
+    }
+
+    file {$nchc::params::hadoop::journal_data_dir:
+        ensure => "directory",
+        owner => "${nchc::params::hadoop::hdadm}",
+        group => "${nchc::params::hadoop::hdgrp}",
+        require => File["hadoop-tmp-dir"],
+    }
+
+    file {"${nchc::params::hadoop::hadoop_current}/etc/hadoop/core-site.xml":
+        owner => "${nchc::params::hadoop::hdadm}",
+        group => "${nchc::params::hadoop::hdgrp}",
+        mode => "664",
+        alias => "core-site-xml",
+        content => template("nchc/hadoop/${nchc::params::hadoop::hadoop_version}/core-site.xml.erb"),
+    }
+
+    file {"${nchc::params::hadoop::hadoop_current}/etc/hadoop/hdfs-site.xml":
+        owner => "${nchc::params::hadoop::hdadm}",
+        group => "${nchc::params::hadoop::hdgrp}",
+        mode => "664",
+        alias => "hdfs-site-xml",
+        content => template("nchc/hadoop/${nchc::params::hadoop::hadoop_version}/hdfs-site.xml.erb"),
     }
 
     file {"${nchc::params::hadoop::hadoop_current}/etc/hadoop/slaves":
@@ -65,24 +72,6 @@ class nchc::hadoop::config{
         content => template("nchc/hadoop/${nchc::params::hadoop::hadoop_version}/hadoop-config.sh.erb"),
     }
 
-
-    exec { "format NameNode":
-        command => "${nchc::params::hadoop::hadoop_current}/bin/hadoop namenode -format",
-        cwd => "${nchc::params::hadoop::hadoop_current}",
-        alias => "format-NN",
-        user => "${nchc::params::hadoop::hdadm}",
-        path    => ["/bin", "/usr/bin", "/usr/sbin" ],
-        onlyif =>"test ${nchc::params::hadoop::master} = $(facter hostname) -a ! -d ${nchc::params::hadoop::namedir}/current",
-        require => [
-                    File[$nchc::params::hadoop::namedir],
-                    File[$nchc::params::hadoop::datadir],
-                    File["hadoop-config"],
-                    File["hadoop-env"],
-                    File["slaves"],
-                    File["hdfs-site-xml"],
-                    File["core-site-xml"],
-                    ],
-    }
 
     file {"${nchc::params::hadoop::hadoop_current}/etc/hadoop/mapred-site.xml":
         owner => "${nchc::params::hadoop::hdadm}",
@@ -115,4 +104,57 @@ class nchc::hadoop::config{
         #alias => "yarn-nm-logdir",
         require => File["hadoop-tmp-dir"],
     }
+
+
+    if $nchc::params::hadoop::qjm_ha_mode == "no" { 
+        exec { "format NameNode":
+            command => "${nchc::params::hadoop::hadoop_current}/bin/hadoop namenode -format",
+            cwd => "${nchc::params::hadoop::hadoop_current}",
+            alias => "format-NN",
+            user => "${nchc::params::hadoop::hdadm}",
+            path    => ["/bin", "/usr/bin", "/usr/sbin" ],
+            onlyif =>"test ${nchc::params::hadoop::master} = $(facter hostname) -a ! -d ${nchc::params::hadoop::namedir}/current",
+            require => [
+                    File[$nchc::params::hadoop::namedir],
+                    File[$nchc::params::hadoop::datadir],
+                    File["hadoop-config"],
+                    File["hadoop-env"],
+                    File["slaves"],
+                    File["hdfs-site-xml"],
+                    File["core-site-xml"],
+                    File["yarn-site-xml"],
+                    ],
+        }
+    } 
+
+    if $nchc::params::hadoop::qjm_ha_mode == "yes" {
+        file {"/tmp/format_HA_NN.sh":
+            owner => "${nchc::params::hadoop::hdadm}",
+            group => "${nchc::params::hadoop::hdgrp}",
+            mode => "744",
+            alias => "HA-NN-sh",
+            content => template("nchc/hadoop/${nchc::params::hadoop::hadoop_version}/format_HA_NN.sh.erb"),
+            require => [
+                    File[$nchc::params::hadoop::namedir],
+                    File[$nchc::params::hadoop::datadir],
+                    File["hadoop-config"],
+                    File["hadoop-env"],
+                    File["slaves"],
+                    File["hdfs-site-xml"],
+                    File["core-site-xml"],
+                    File["yarn-site-xml"],
+                    ],
+        }
+
+        exec { "format HA NameNode":
+            command => "/tmp/format_HA_NN.sh",
+            cwd => "${nchc::params::hadoop::hadoop_current}",
+            alias => "format-HA-NN",
+            user => "${nchc::params::hadoop::hdadm}",
+            path    => ["/bin", "/usr/bin", "/usr/sbin","/tmp" ],
+            onlyif =>"test ${nchc::params::hadoop::master} = $(facter hostname) -a ! -d ${nchc::params::hadoop::namedir}/current",
+            require => File["HA-NN-sh"],
+        }
+    }
+
 }

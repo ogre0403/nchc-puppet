@@ -1,0 +1,45 @@
+#!/bin/bash
+
+JN_LIST="<%= scope.lookupvar('nchc::params::hadoop::journalnodes').join(' ') %>"
+ZK_LIST="<%= scope.lookupvar('nchc::params::hadoop::zookeeper_quorum').join(' ') %>"
+masterNN=<%= scope.lookupvar('nchc::params::hadoop::master') %>
+backupNN=<%= scope.lookupvar('nchc::params::hadoop::standby_master') %>
+
+
+
+
+# start ZK
+for i in $ZK_LIST; do
+     ssh  <%= scope.lookupvar('nchc::params::hadoop::hdadm') %>@$i "export JAVA_HOME=<%= scope.lookupvar('nchc::params::hadoop::hadoop_jdk') %>;  <%= scope.lookupvar('nchc::params::zookeeper::zk_current') %>/bin/zkServer.sh start " >/dev/null 2>&1
+done
+
+# hdfs zkfc -formatZK  
+ssh <%= scope.lookupvar('nchc::params::hadoop::hdadm') %>@$masterNN "export JAVA_HOME=<%= scope.lookupvar('nchc::params::hadoop::hadoop_jdk') %>; <%= scope.lookupvar('nchc::params::hadoop::hadoop_current') %>/bin/hdfs zkfc -formatZK -force" >/dev/null 2>&1 
+
+# start JournalNode
+for i in $JN_LIST; do
+     ssh  <%= scope.lookupvar('nchc::params::hadoop::hdadm') %>@$i "export JAVA_HOME=<%= scope.lookupvar('nchc::params::hadoop::hadoop_jdk') %>; <%= scope.lookupvar('nchc::params::hadoop::hadoop_current') %>/sbin/hadoop-daemon.sh start journalnode " >/dev/null 2>&1
+done
+
+
+# format master NN
+ssh <%= scope.lookupvar('nchc::params::hadoop::hdadm') %>@$masterNN "export JAVA_HOME=<%= scope.lookupvar('nchc::params::hadoop::hadoop_jdk') %>; <%= scope.lookupvar('nchc::params::hadoop::hadoop_current') %>/bin/hadoop namenode -format" >/dev/null 2>&1 
+
+
+ssh <%= scope.lookupvar('nchc::params::hadoop::hdadm') %>@$masterNN "export JAVA_HOME=<%= scope.lookupvar('nchc::params::hadoop::hadoop_jdk') %>; <%= scope.lookupvar('nchc::params::hadoop::hadoop_current') %>/sbin/hadoop-daemon.sh start namenode" >/dev/null 2>&1 
+
+
+ssh <%= scope.lookupvar('nchc::params::hadoop::hdadm') %>@$backupNN "export JAVA_HOME=<%= scope.lookupvar('nchc::params::hadoop::hadoop_jdk') %>; <%= scope.lookupvar('nchc::params::hadoop::hadoop_current') %>/bin/hdfs namenode -bootstrapStandby" >/dev/null 2>&1 
+
+
+ssh <%= scope.lookupvar('nchc::params::hadoop::hdadm') %>@$masterNN "export JAVA_HOME=<%= scope.lookupvar('nchc::params::hadoop::hadoop_jdk') %>; <%= scope.lookupvar('nchc::params::hadoop::hadoop_current') %>/sbin/hadoop-daemon.sh stop namenode" >/dev/null 2>&1 
+
+
+for i in $JN_LIST; do
+     ssh  <%= scope.lookupvar('nchc::params::hadoop::hdadm') %>@$i "export JAVA_HOME=<%= scope.lookupvar('nchc::params::hadoop::hadoop_jdk') %>; <%= scope.lookupvar('nchc::params::hadoop::hadoop_current') %>/sbin/hadoop-daemon.sh stop journalnode " >/dev/null 2>&1
+done
+
+
+for i in $ZK_LIST; do
+     ssh  <%= scope.lookupvar('nchc::params::hadoop::hdadm') %>@$i "export JAVA_HOME=<%= scope.lookupvar('nchc::params::hadoop::hadoop_jdk') %>;  <%= scope.lookupvar('nchc::params::zookeeper::zk_current') %>/bin/zkServer.sh stop " >/dev/null 2>&1
+done

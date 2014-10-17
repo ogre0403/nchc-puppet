@@ -34,7 +34,58 @@
     <property>
         <name>dfs.datanode.data.dir</name>
         <value><%= scope.lookupvar('nchc::params::hadoop::datadir').join(',') %></value>
-     </property>
+    </property>
 
+<% if scope.lookupvar('nchc::params::hadoop::qjm_ha_mode') == "yes" %>
+    <property>
+        <name>dfs.nameservices</name>
+        <value><%= scope.lookupvar('nchc::params::hadoop::dfs_nameservices') %></value>
+    </property>
+    <property>
+        <name>dfs.ha.namenodes.<%= scope.lookupvar('nchc::params::hadoop::dfs_nameservices') %></name>
+        <value>nn1,nn2</value>
+    </property>
+    <property>
+        <name>dfs.namenode.rpc-address.<%= scope.lookupvar('nchc::params::hadoop::dfs_nameservices') %>.nn1</name>
+        <value><%= scope.lookupvar('nchc::params::hadoop::master') %>:<%= scope.lookupvar('nchc::params::hadoop::hdfsport') %></value>
+    </property>
+    <property>
+        <name>dfs.namenode.rpc-address.<%= scope.lookupvar('nchc::params::hadoop::dfs_nameservices') %>.nn2</name>
+        <value><%= scope.lookupvar('nchc::params::hadoop::standby_master') %>:<%= scope.lookupvar('nchc::params::hadoop::hdfsport') %></value>
+    </property>
+    <property>
+        <name>dfs.namenode.http-address.<%= scope.lookupvar('nchc::params::hadoop::dfs_nameservices') %>.nn1</name>
+        <value><%= scope.lookupvar('nchc::params::hadoop::master') %>:50070</value>
+    </property>
+    <property>
+        <name>dfs.namenode.http-address.<%= scope.lookupvar('nchc::params::hadoop::dfs_nameservices') %>.nn2</name>
+        <value><%= scope.lookupvar('nchc::params::hadoop::standby_master') %>:50070</value>
+    </property>
+    <property>
+        <name>dfs.namenode.shared.edits.dir</name>
+        <value>qjournal://<%= scope.lookupvar('nchc::params::hadoop::journalnodes').join(':8485;') %>:8485/<%= scope.lookupvar('nchc::params::hadoop::dfs_nameservices') %></value>
+    </property>
+    <property>
+        <name>dfs.journalnode.edits.dir</name>
+        <value><%= scope.lookupvar('nchc::params::hadoop::journal_data_dir') %></value>
+    </property>
+    <property>
+        <name>dfs.client.failover.proxy.provider.<%= scope.lookupvar('nchc::params::hadoop::dfs_nameservices') %></name>
+        <value>org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider</value>
+    </property>
+    <property>
+        <name>dfs.ha.fencing.methods</name>
+        <value>sshfence</value>
+    </property>
+    <property>
+        <name>dfs.ha.fencing.ssh.private-key-files</name>
+        <value>/home/<%= scope.lookupvar('nchc::params::hadoop::hdadm') %>/.ssh/id_rsa</value>
+    </property>
+    <property>
+        <name>dfs.ha.automatic-failover.enabled</name>
+        <value>true</value>
+    </property>
+
+<% end %>
 
 </configuration>
