@@ -2,52 +2,18 @@
 
 class nchc::params::hbase {
 
-    $hbase_adm = $::hostname ? {
-       default => "hdadm",
-    }
-
-    $hbase_grp = $::hostname ? {
-       default => "hdadm",
-    }
-
-    $hbase_jdk = $::hostname ? {
-       default => "/opt/java",
-    }
-
-    $hbase_hdfs = $::hostname ? {
-       default => "NN-agent",
-    }
-
-    $hbase_hdfsport = $::hostname ? {
-       default => "9000",
-    }
-
-    $hbase_version = $::hostname ? {
-       default => "hbase-0.94.15-cdh4.7.0",
-    }
-
-    $hbase_base = $::hostname ? {
-        default     => "/opt/hbase_version",
-    }
-
-    $hbase_current = $::hostname ? {
-        default     => "/opt/hbase",
-    }
-
-    $hbase_master = $::hostname ? {
-        default     => ["NN-agent"]
-    }
-
-    $hbase_regionservers = $::hostname ? {
-        default     => ["DN1-agent"]
-    }
-
-    $zookeeper_quorum = $::hostname ? {
-        default     => ["NN-agent"],
-    }
- 
-    $hbase_dir = $::hostname ? {
-        default     => "hbase",
-    }
-
+    $hbase_adm =  "hdadm"
+    $hbase_grp = "hdadm" 
+    $hbase_jdk = "/opt/java"
+    $hbase_hdfs =  "NN-agent"
+    $hbase_hdfsport = "9000"
+    $hbase_version = "hbase-0.94.15-cdh4.7.0"
+    $hbase_base =  "/opt/hbase_version"
+    $hbase_current = "/opt/hbase"
+    $hbase_master = ["NN-agent"]
+    $hbase_regionservers = ["DN1-agent"]
+    $zookeeper_quorum = ["NN-agent"]
+    $hbase_dir = "hbase"
+    $rs_heap = "8192"
+    $hadoop_conf_path = "/opt/hadoop/etc/hadoop"
 }

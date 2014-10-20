@@ -24,6 +24,8 @@ class nchc::params::hadoop{
     $namedir =  ["${hadoop_tmp_path}/name1"]
     $datadir =  ["${hadoop_tmp_path}/data1"]
 
+    $namenode_heap = "512m"
+
     #yarn-site.pp
     $resourcemanager =  "${master}"
     $resource_tracker_port =  "8031"
@@ -55,5 +57,8 @@ class nchc::params::hadoop{
         $journal_data_dir = undef
         $zookeeper_quorum = undef
     }
+
+    $rack_aware = "yes"
+    
 }
 

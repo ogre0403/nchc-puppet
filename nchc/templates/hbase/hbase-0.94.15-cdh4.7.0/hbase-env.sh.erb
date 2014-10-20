@@ -40,6 +40,7 @@
 # see http://wiki.apache.org/hadoop/PerformanceTuning
 export HBASE_OPTS="-XX:+UseConcMarkSweepGC"
 export JAVA_HOME=<%= scope.lookupvar('nchc::params::hbase::hbase_jdk') %>
+export HBASE_HEAPSIZE=<%= scope.lookupvar('nchc::params::hbase::rs_heap') %>
 export HBASE_MANAGES_ZK=false
 # Uncomment one of the below three options to enable java garbage collection logging for the server-side processes.
 

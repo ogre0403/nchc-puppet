@@ -32,4 +32,17 @@ class nchc::hbase::config {
         content => template("nchc/hbase/${nchc::params::hbase::hbase_version}/hbase-site.xml.erb"),
     }
 
+    file { "${nchc::params::hbase::hbase_base}/${nchc::params::hbase::hbase_version}/conf/core-site.xml":
+        ensure => 'link',
+        target => "${nchc::params::hbase::hadoop_conf_path}/core-site.xml",
+        owner => "${nchc::params::hbase::hbase_adm}",
+        group => "${nchc::params::hbase::hbase_grp}",
+    }
+
+    file { "${nchc::params::hbase::hbase_base}/${nchc::params::hbase::hbase_version}/conf/hdfs-site.xml":
+        ensure => 'link',
+        target => "${nchc::params::hbase::hadoop_conf_path}/hdfs-site.xml",
+        owner  => "${nchc::params::hbase::hbase_adm}",
+        group  => "${nchc::params::hbase::hbase_grp}",
+    }
 }

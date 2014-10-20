@@ -29,6 +29,14 @@
     </property>
 <% end %>
 
+<% if scope.lookupvar('nchc::params::hadoop::rack_aware') == "yes" %>
+    <property>
+        <name>net.topology.script.file.name</name>
+        <value><%= scope.lookupvar('nchc::params::hadoop::hadoop_current') %>/etc/hadoop/rack-topology.sh</value>
+    </property>
+<% end %>
+
+
 <% if scope.lookupvar('nchc::params::hadoop::qjm_ha_mode') == "yes" %>
     <property>
         <name>fs.defaultFS</name>

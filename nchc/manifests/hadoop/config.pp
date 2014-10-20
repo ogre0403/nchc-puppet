@@ -83,6 +83,14 @@ class nchc::hadoop::config{
     #    require => File["hadoop-tmp-dir"],
     #}
 
+    file {"${nchc::params::hadoop::hadoop_current}/bin/hdfs":
+        owner => "${nchc::params::hadoop::hdadm}",
+        group => "${nchc::params::hadoop::hdgrp}",
+        mode => "755",
+        alias => "hdfs-sh",
+        content => template("nchc/hadoop/${nchc::params::hadoop::hadoop_version}/hdfs.erb"),
+    }
+
     file {"${nchc::params::hadoop::hadoop_current}/etc/hadoop/core-site.xml":
         owner => "${nchc::params::hadoop::hdadm}",
         group => "${nchc::params::hadoop::hdgrp}",
@@ -149,6 +157,25 @@ class nchc::hadoop::config{
         force => true,
         mode => 0755,
         source => "puppet:///modules/nchc/hadoop/lib/",  
+        alias  => "native-lib",
+    }
+
+    if $nchc::params::hadoop::rack_aware == "yes"{
+        file {"${nchc::params::hadoop::hadoop_current}/etc/hadoop/rack-topology.sh":
+            ensure => "present",
+            owner => "${nchc::params::hadoop::hdadm}",
+            group => "${nchc::params::hadoop::hdgrp}",
+            source => "puppet:///modules/nchc/hadoop/rack/rack-topology.sh",  
+            #alias  => "rack-sh",
+        }
+
+        file {"${nchc::params::hadoop::hadoop_current}/etc/hadoop/rack_topology.data":
+            ensure => "present",
+            owner => "${nchc::params::hadoop::hdadm}",
+            group => "${nchc::params::hadoop::hdgrp}",
+            source => "puppet:///modules/nchc/hadoop/rack/rack_topology.data",  
+            #alias  => "rack-data",
+        }
     }
 
     if $nchc::params::hadoop::qjm_ha_mode == "no" and  
@@ -170,6 +197,7 @@ class nchc::hadoop::config{
                     File["hdfs-site-xml"],
                     File["core-site-xml"],
                     File["yarn-site-xml"],
+                    File["native-lib"],
                     ],
         }
     } 
@@ -192,6 +220,7 @@ class nchc::hadoop::config{
                     File["hdfs-site-xml"],
                     File["core-site-xml"],
                     File["yarn-site-xml"],
+                    File["native-lib"],
                     ],
         }
 
