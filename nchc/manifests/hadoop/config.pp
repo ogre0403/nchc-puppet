@@ -1,5 +1,22 @@
 #/etc/puppet/modules/hadoop/manifests/config.pp
 
+define multidir {
+    exec { "mkdir ${name}":
+        command => "mkdir -p ${name}",
+        cwd => "${nchc::params::hadoop::hadoop_base}/",
+        path   => ["/bin", "/usr/bin", "/usr/sbin"],
+        alias  => "dir-${name}",
+        onlyif => "test ! -d ${name}",
+    }
+
+    file { "${name}":
+        ensure => "directory",
+        owner => "${nchc::params::hadoop::hdadm}",
+        group => "${nchc::params::hadoop::hdgrp}",
+        require => Exec["dir-${name}"],
+    }
+}
+
 class nchc::hadoop::config{
     include nchc::params::hadoop
     include nchc::params::zookeeper
@@ -11,26 +28,60 @@ class nchc::hadoop::config{
         alias => "hadoop-tmp-dir",
      }
  
-    file {$nchc::params::hadoop::namedir:
-        ensure => "directory",
-        owner => "${nchc::params::hadoop::hdadm}",
-        group => "${nchc::params::hadoop::hdgrp}",
-        require => File["hadoop-tmp-dir"],
-     }
-
-    file {$nchc::params::hadoop::datadir:
-        ensure => "directory",
-        owner => "${nchc::params::hadoop::hdadm}",
-        group => "${nchc::params::hadoop::hdgrp}",
+    multidir { $nchc::params::hadoop::namedir: 
         require => File["hadoop-tmp-dir"],
     }
 
-    file {$nchc::params::hadoop::journal_data_dir:
-        ensure => "directory",
-        owner => "${nchc::params::hadoop::hdadm}",
-        group => "${nchc::params::hadoop::hdgrp}",
+    multidir { $nchc::params::hadoop::datadir: 
         require => File["hadoop-tmp-dir"],
     }
+
+    multidir { $nchc::params::hadoop::journal_data_dir: 
+        require => File["hadoop-tmp-dir"],
+    }
+
+    multidir { $nchc::params::hadoop::yarn_nodemanager_localdirs: 
+        require => File["hadoop-tmp-dir"],
+    }
+
+    multidir { $nchc::params::hadoop::yarn_nodemanager_logdirs: 
+        require => File["hadoop-tmp-dir"],
+    }
+
+    #file {$nchc::params::hadoop::namedir:
+    #    ensure => "directory",
+    #    owner => "${nchc::params::hadoop::hdadm}",
+    #    group => "${nchc::params::hadoop::hdgrp}",
+    #    require => File["hadoop-tmp-dir"],
+    # }
+
+    #file {$nchc::params::hadoop::datadir:
+    #    ensure => "directory",
+    #    owner => "${nchc::params::hadoop::hdadm}",
+    #    group => "${nchc::params::hadoop::hdgrp}",
+    #    require => File["hadoop-tmp-dir"],
+    #}
+
+    #file {$nchc::params::hadoop::journal_data_dir:
+    #    ensure => "directory",
+    #    owner => "${nchc::params::hadoop::hdadm}",
+    #    group => "${nchc::params::hadoop::hdgrp}",
+    #    require => File["hadoop-tmp-dir"],
+    #}
+
+    #file {$nchc::params::hadoop::yarn_nodemanager_localdirs:
+    #    ensure => "directory",
+    #    owner => "${nchc::params::hadoop::hdadm}",
+    #    group => "${nchc::params::hadoop::hdgrp}",
+    #    require => File["hadoop-tmp-dir"],
+    #}
+
+    #file {$nchc::params::hadoop::yarn_nodemanager_logdirs:
+    #    ensure => "directory",
+    #    owner => "${nchc::params::hadoop::hdadm}",
+    #    group => "${nchc::params::hadoop::hdgrp}",
+    #    require => File["hadoop-tmp-dir"],
+    #}
 
     file {"${nchc::params::hadoop::hadoop_current}/etc/hadoop/core-site.xml":
         owner => "${nchc::params::hadoop::hdadm}",
@@ -89,31 +140,27 @@ class nchc::hadoop::config{
         content => template("nchc/hadoop/${nchc::params::hadoop::hadoop_version}/yarn-site.xml.erb"),
     }
 
-    file {$nchc::params::hadoop::yarn_nodemanager_localdirs:
-        ensure => "directory",
+    file {"${nchc::params::hadoop::hadoop_current}/lib/native/":
+        ensure => directory,
         owner => "${nchc::params::hadoop::hdadm}",
         group => "${nchc::params::hadoop::hdgrp}",
-        #alias => "yarn-nm-localdir",
-        require => File["hadoop-tmp-dir"],
+        recurse => true,
+        purge => true,
+        force => true,
+        mode => 0755,
+        source => "puppet:///modules/nchc/hadoop/lib/",  
     }
 
-    file {$nchc::params::hadoop::yarn_nodemanager_logdirs:
-        ensure => "directory",
-        owner => "${nchc::params::hadoop::hdadm}",
-        group => "${nchc::params::hadoop::hdgrp}",
-        #alias => "yarn-nm-logdir",
-        require => File["hadoop-tmp-dir"],
-    }
-
-
-    if $nchc::params::hadoop::qjm_ha_mode == "no" { 
+    if $nchc::params::hadoop::qjm_ha_mode == "no" and  
+        "${nchc::params::hadoop::formatNN}" == "yes" {
         exec { "format NameNode":
             command => "${nchc::params::hadoop::hadoop_current}/bin/hadoop namenode -format",
             cwd => "${nchc::params::hadoop::hadoop_current}",
             alias => "format-NN",
             user => "${nchc::params::hadoop::hdadm}",
             path    => ["/bin", "/usr/bin", "/usr/sbin" ],
-            onlyif =>"test ${nchc::params::hadoop::master} = $(facter hostname) -a ! -d ${nchc::params::hadoop::namedir}/current",
+            onlyif =>"test  ! -d ${nchc::params::hadoop::namedir}/current",
+            #onlyif =>"test ${nchc::params::hadoop::master} = $(facter hostname) -a ! -d ${nchc::params::hadoop::namedir}/current",
             require => [
                     File[$nchc::params::hadoop::namedir],
                     File[$nchc::params::hadoop::datadir],
@@ -127,7 +174,9 @@ class nchc::hadoop::config{
         }
     } 
 
-    if $nchc::params::hadoop::qjm_ha_mode == "yes" and "${nchc::params::hadoop::master}" == "$::hostname" {
+    if $nchc::params::hadoop::qjm_ha_mode == "yes" and 
+        "${nchc::params::hadoop::master}" == "$::hostname" and 
+        "${nchc::params::hadoop::formatNN}" == "yes" {
         file {"/tmp/format_HA_NN.sh":
             owner => "${nchc::params::hadoop::hdadm}",
             group => "${nchc::params::hadoop::hdgrp}",
@@ -152,7 +201,7 @@ class nchc::hadoop::config{
             alias => "format-HA-NN",
             user => "${nchc::params::hadoop::hdadm}",
             path    => ["/bin", "/usr/bin", "/usr/sbin","/tmp" ],
-            onlyif =>"test ${nchc::params::hadoop::master} = $(facter hostname) -a ! -d ${nchc::params::hadoop::namedir}/current",
+            onlyif =>"test ! -d ${nchc::params::hadoop::namedir}/current",
             require => File["HA-NN-sh"],
         }
 
