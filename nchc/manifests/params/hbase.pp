@@ -16,4 +16,11 @@ class nchc::params::hbase {
     $hbase_dir = "hbase"
     $rs_heap = "8192"
     $hadoop_conf_path = "/opt/hadoop/etc/hadoop"
+    
+    $ganglia_monitor = "no"
+    if $ganglia_monitor == "yes" {
+        $gmetad_server = "NN-agent"
+    }elsif $ganglia_monitor == "no"{
+        $gmetad_server = undef
+    }
 }

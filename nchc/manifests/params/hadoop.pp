@@ -42,8 +42,10 @@ class nchc::params::hadoop{
     $yarn_mr_am = "1024"
     $yarn_mr_am_opt = "800m"
 
-    $qjm_ha_mode = "yes"
     $formatNN = "no"
+
+    # HA configuration
+    $qjm_ha_mode = "yes"
     if $qjm_ha_mode == "yes" {
         $dfs_nameservices = "MYHDFS"
         $standby_master = "NN"
@@ -58,7 +60,15 @@ class nchc::params::hadoop{
         $zookeeper_quorum = undef
     }
 
+    #rack-aware configuration
     $rack_aware = "yes"
     
+    # enable ganglia monitor configuration
+    $ganglia_monitor = "yes"
+    if $ganglia_monitor == "yes" {
+        $gmetad_server = "NN-agent"
+    }elsif $ganglia_monitor == "no"{
+        $gmetad_server = undef
+    }
 }
 

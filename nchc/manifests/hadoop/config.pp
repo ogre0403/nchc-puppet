@@ -176,7 +176,22 @@ class nchc::hadoop::config{
             source => "puppet:///modules/nchc/hadoop/rack/rack_topology.data",  
             #alias  => "rack-data",
         }
+    } elsif $nchc::params::hadoop::rack_aware == "no"{
+        file {"${nchc::params::hadoop::hadoop_current}/etc/hadoop/rack-topology.sh":
+            ensure => "absent",
+        } 
+        file {"${nchc::params::hadoop::hadoop_current}/etc/hadoop/rack_topology.data":
+            ensure => "absent",
+        }
     }
+
+    file {"${nchc::params::hadoop::hadoop_current}/etc/hadoop/hadoop-metrics2.properties":
+        ensure => "present",
+        owner => "${nchc::params::hadoop::hdadm}",
+        group => "${nchc::params::hadoop::hdgrp}",
+        content => template("nchc/hadoop/${nchc::params::hadoop::hadoop_version}/hadoop-metrics2.properties.erb"),
+    }
+
 
     if $nchc::params::hadoop::qjm_ha_mode == "no" and  
         "${nchc::params::hadoop::formatNN}" == "yes" {

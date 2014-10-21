@@ -3,10 +3,6 @@
 class nchc::hbase::config {
 
     require nchc::params::hbase
-    #require hadoop::params
-    #require zookeeper::params
-    
-
     
     file { "${nchc::params::hbase::hbase_base}/${nchc::params::hbase::hbase_version}/conf/regionservers":
         owner => "${nchc::params::hbase::hbase_adm}",
@@ -44,5 +40,11 @@ class nchc::hbase::config {
         target => "${nchc::params::hbase::hadoop_conf_path}/hdfs-site.xml",
         owner  => "${nchc::params::hbase::hbase_adm}",
         group  => "${nchc::params::hbase::hbase_grp}",
+    }
+    
+    file { "${nchc::params::hbase::hbase_base}/${nchc::params::hbase::hbase_version}/conf/hadoop-metrics.properties":
+        owner => "${nchc::params::hbase::hbase_adm}",
+        group => "${nchc::params::hbase::hbase_grp}",
+        content => template("nchc/hbase/${nchc::params::hbase::hbase_version}/hadoop-metrics.properties.erb"),
     }
 }
