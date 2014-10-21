@@ -70,5 +70,7 @@ class nchc::params::hadoop{
     }elsif $ganglia_monitor == "no"{
         $gmetad_server = undef
     }
+
+    $enable_capacity_scheduler = "yes"
 }
 

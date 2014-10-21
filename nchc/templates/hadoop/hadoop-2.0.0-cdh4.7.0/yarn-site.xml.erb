@@ -73,4 +73,12 @@
         <value>-Xmx<%= scope.lookupvar('nchc::params::hadoop::yarn_mr_am_opt') %></value>
     </property>
 
+<% if scope.lookupvar('nchc::params::hadoop::enable_capacity_scheduler') == "yes" %>
+    <property>
+        <name>yarn.resourcemanager.scheduler.class</name>
+        <value>org.apache.hadoop.yarn.server.resourcemanager.scheduler.capacity.CapacityScheduler</value>
+    </property>
+<% end %>
+
+
 </configuration>

@@ -192,6 +192,12 @@ class nchc::hadoop::config{
         content => template("nchc/hadoop/${nchc::params::hadoop::hadoop_version}/hadoop-metrics2.properties.erb"),
     }
 
+    file {"${nchc::params::hadoop::hadoop_current}/etc/hadoop/capacity-scheduler.xml":
+        ensure => "present",
+        owner => "${nchc::params::hadoop::hdadm}",
+        group => "${nchc::params::hadoop::hdgrp}",
+        content => template("nchc/hadoop/${nchc::params::hadoop::hadoop_version}/capacity-scheduler.xml.erb"),
+    }
 
     if $nchc::params::hadoop::qjm_ha_mode == "no" and  
         "${nchc::params::hadoop::formatNN}" == "yes" {
