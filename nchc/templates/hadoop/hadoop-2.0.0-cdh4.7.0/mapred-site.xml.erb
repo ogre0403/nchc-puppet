@@ -8,4 +8,30 @@
         <name>mapreduce.framework.name</name>
         <value>yarn</value>
     </property>
+
+    <property>
+        <name>mapreduce.map.memory.mb</name>
+        <value><%= scope.lookupvar('nchc::params::hadoop::map_mem') %></value>
+    </property>
+    <property>
+        <name>mapreduce.reduce.memory.mb</name>
+        <value><%= scope.lookupvar('nchc::params::hadoop::reduce_mem') %></value>
+    </property>
+    <property>
+        <name>mapreduce.map.java.opts</name>
+        <value>-Xmx<%= scope.lookupvar('nchc::params::hadoop::map_opt') %></value>
+    </property>
+    <property>
+        <name>mapreduce.reduce.java.opts</name>
+        <value>-Xmx<%= scope.lookupvar('nchc::params::hadoop::reduce_opt') %></value>
+    </property>
+
+    <property>
+        <name>mapreduce.jobhistory.address</name>
+        <value><%= scope.lookupvar('nchc::params::hadoop::histroyserver') %>:10020</value>
+    </property>
+    <property>
+        <name>mapreduce.jobhistory.webapp.address</name>
+        <value><%= scope.lookupvar('nchc::params::hadoop::histroyserver') %>:19888</value>
+    </property>
 </configuration>

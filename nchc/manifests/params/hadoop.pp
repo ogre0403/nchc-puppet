@@ -36,12 +36,20 @@ class nchc::params::hadoop{
     $yarn_nodemanager_localdirs =  ["${hadoop_tmp_path}/nm-local-dir"]
     $yarn_nodemanager_logdirs =  ["${hadoop_tmp_path}/userlogs"]
     $yarn_remote_logdirs = "/var/log/hadoop-yarn/apps"
-    $yarn_rm_mem = "1024"
-    $yarn_schedule_min =  "256"
-    $yarn_schedule_max = "1024"
-    $yarn_mr_am = "1024"
+    $yarn_rm_mem = "4096"
+    $yarn_schedule_min =  "1024"
+    $yarn_schedule_max = "2048"
+    $yarn_mr_am = "2048"
     $yarn_mr_am_opt = "800m"
 
+    #mapred-site.xml
+    $histroyserver = "NN-agent"
+    $map_mem = "1024"
+    $reduce_mem = "1024"
+    $map_opt = "800m"
+    $reduce_opt = "800m"
+
+    
     $formatNN = "no"
 
     # HA configuration
