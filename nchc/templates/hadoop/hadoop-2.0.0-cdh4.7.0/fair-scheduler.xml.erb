@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<allocations>
+  <queue name="default">
+    <minResources>1024 mb, 2 vcores</minResources>
+    <maxResources>4096 mb, 8 vcores</maxResources>
+    <weight>1.0</weight>
+    <schedulingMode>fair</schedulingMode>
+  </queue>
+  <queue name="NCHC">
+    <minResources>6144 mb, 12 vcores</minResources>
+    <maxResources>12288 mb, 24 vcores</maxResources>
+    <weight>2.0</weight>
+    <schedulingMode>fair</schedulingMode>
+    <queue name="A">
+      <minResources>3072 mb, 6 vcores</minResources>
+    </queue>
+    <queue name="B">
+      <minResources>3072 mb, 6 vcores</minResources>
+    </queue>
+  </queue>
+   
+  <userMaxAppsDefault>50</userMaxAppsDefault>
+   
+</allocations>

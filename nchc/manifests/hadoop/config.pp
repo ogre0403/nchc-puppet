@@ -192,12 +192,39 @@ class nchc::hadoop::config{
         content => template("nchc/hadoop/${nchc::params::hadoop::hadoop_version}/hadoop-metrics2.properties.erb"),
     }
 
-    file {"${nchc::params::hadoop::hadoop_current}/etc/hadoop/capacity-scheduler.xml":
-        ensure => "present",
-        owner => "${nchc::params::hadoop::hdadm}",
-        group => "${nchc::params::hadoop::hdgrp}",
-        content => template("nchc/hadoop/${nchc::params::hadoop::hadoop_version}/capacity-scheduler.xml.erb"),
+    if $nchc::params::hadoop::scheduler_type == "capacity" {
+        file {"${nchc::params::hadoop::hadoop_current}/etc/hadoop/capacity-scheduler.xml":
+            ensure => "present",
+            owner => "${nchc::params::hadoop::hdadm}",
+            group => "${nchc::params::hadoop::hdgrp}",
+            content => template("nchc/hadoop/${nchc::params::hadoop::hadoop_version}/capacity-scheduler.xml.erb"),
+        }
+        file {"${nchc::params::hadoop::hadoop_current}/etc/hadoop/fair-scheduler.xml":
+            ensure => "absent",
+        }
     }
+
+    if $nchc::params::hadoop::scheduler_type == "fair" {
+        file {"${nchc::params::hadoop::hadoop_current}/etc/hadoop/fair-scheduler.xml":
+            ensure => "present",
+            owner => "${nchc::params::hadoop::hdadm}",
+            group => "${nchc::params::hadoop::hdgrp}",
+            content => template("nchc/hadoop/${nchc::params::hadoop::hadoop_version}/fair-scheduler.xml.erb"),
+        }
+        file {"${nchc::params::hadoop::hadoop_current}/etc/hadoop/capacity-scheduler.xml":
+            ensure => "absent",
+        }
+    }
+
+    if $nchc::params::hadoop::scheduler_type == "fifo" {
+        file {"${nchc::params::hadoop::hadoop_current}/etc/hadoop/capacity-scheduler.xml":
+            ensure => "absent",
+        }
+        file {"${nchc::params::hadoop::hadoop_current}/etc/hadoop/fair-scheduler.xml":
+            ensure => "absent",
+        }
+    }
+
 
     if $nchc::params::hadoop::qjm_ha_mode == "no" and  
         "${nchc::params::hadoop::formatNN}" == "yes" {

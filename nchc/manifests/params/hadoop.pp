@@ -79,6 +79,7 @@ class nchc::params::hadoop{
         $gmetad_server = undef
     }
 
-    $enable_capacity_scheduler = "yes"
+    #$enable_capacity_scheduler = "yes"
+    $scheduler_type = "fair" #fifo| capacity|fair
 }
 
