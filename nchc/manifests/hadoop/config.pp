@@ -250,6 +250,21 @@ class nchc::hadoop::config{
         }
     } 
 
+    if $nchc::params::hadoop::qjm_ha_mode == "yes" {
+        file {"${nchc::params::hadoop::hadoop_current}/etc/hadoop/zk-auth.txt":
+            ensure => "present",
+            owner => "${nchc::params::hadoop::hdadm}",
+            group => "${nchc::params::hadoop::hdgrp}",
+            content => template("nchc/hadoop/${nchc::params::hadoop::hadoop_version}/zk-auth.txt.erb"),
+        }
+        file {"${nchc::params::hadoop::hadoop_current}/etc/hadoop/zk-acl.txt":
+            ensure => "present",
+            owner => "${nchc::params::hadoop::hdadm}",
+            group => "${nchc::params::hadoop::hdgrp}",
+            content => template("nchc/hadoop/${nchc::params::hadoop::hadoop_version}/zk-acl.txt.erb"),
+        }
+    }
+
     if $nchc::params::hadoop::qjm_ha_mode == "yes" and 
         "${nchc::params::hadoop::master}" == "$::hostname" and 
         "${nchc::params::hadoop::formatNN}" == "yes" {

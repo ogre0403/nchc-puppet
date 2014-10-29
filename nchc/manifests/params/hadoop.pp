@@ -60,12 +60,18 @@ class nchc::params::hadoop{
         $journalnodes = ["NN-agent", "DN1-agent", "DN2-agent" ]
         $journal_data_dir = "${hadoop_tmp_path}/journaldata"
         $zookeeper_quorum = ["NN-agent"]
+        $zk_auth_text = "digest:hdfs-zkfcs:mypassword"
+        # obtain following acl text by running:
+        # java -cp $ZK_HOME/lib/*:$ZK_HOME/zookeeper-3.4.5-cdh4.7.0.jar org.apache.zookeeper.server.auth.DigestAuthenticationProvider hdfs-zkfcs:mypassword
+        $zk_acl_text = "digest:hdfs-zkfcs:P/OQvnYyU/nF/mGYvB/xurX8dYs=:rwcda"
     } elsif $qjm_ha_mode == "no" {
         $dfs_nameservices = undef
         $standby_master = undef
         $journalnodes = under
         $journal_data_dir = undef
         $zookeeper_quorum = undef
+        $zk_auth_text = undef
+        $zk_acl_text = undef
     }
 
     #rack-aware configuration
