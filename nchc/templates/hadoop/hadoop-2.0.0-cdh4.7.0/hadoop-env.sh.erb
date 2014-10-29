@@ -27,8 +27,10 @@
 #export JAVA_HOME=${JAVA_HOME}
 export JAVA_HOME=<%= scope.lookupvar('nchc::params::hadoop::hadoop_jdk') %>
 
+<% if scope.lookupvar('nchc::params::hadoop::kerberos_mode') == "yes" %>
 # The jsvc implementation to use. Jsvc is required to run secure datanodes.
-#export JSVC_HOME=${JSVC_HOME}
+export JSVC_HOME=<%= scope.lookupvar('nchc::params::hadoop::jsvc_path') %>
+<% end %>
 
 export HADOOP_CONF_DIR=${HADOOP_CONF_DIR:-"/etc/hadoop"}
 
@@ -58,8 +60,11 @@ export HADOOP_SECONDARYNAMENODE_OPTS="-Dhadoop.security.logger=${HADOOP_SECURITY
 export HADOOP_CLIENT_OPTS="-Xmx512m $HADOOP_CLIENT_OPTS"
 #HADOOP_JAVA_PLATFORM_OPTS="-XX:-UsePerfData $HADOOP_JAVA_PLATFORM_OPTS"
 
+<% if scope.lookupvar('nchc::params::hadoop::kerberos_mode') == "yes" %>
 # On secure datanodes, user to run the datanode as after dropping privileges
-export HADOOP_SECURE_DN_USER=${HADOOP_SECURE_DN_USER}
+#export HADOOP_SECURE_DN_USER=${HADOOP_SECURE_DN_USER}
+export HADOOP_SECURE_DN_USER=<%= scope.lookupvar('nchc::params::hadoop::secure_user') %>
+<% end %>
 
 # Where log files are stored.  $HADOOP_HOME/logs by default.
 #export HADOOP_LOG_DIR=${HADOOP_LOG_DIR}/$USER

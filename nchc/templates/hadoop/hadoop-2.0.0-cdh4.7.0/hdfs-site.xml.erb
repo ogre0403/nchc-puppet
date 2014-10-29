@@ -23,8 +23,8 @@
         <value><%= scope.lookupvar('nchc::params::hadoop::replica_factor') %></value>
     </property>  
     <property>
-        <name>dfs.permissions</name>
-        <value>false</value>
+        <name>dfs.permissions.enabled</name>
+        <value>true</value>
     </property>
 
     <property>
@@ -85,6 +85,77 @@
         <name>dfs.ha.automatic-failover.enabled</name>
         <value>true</value>
     </property>
+<% end %>
+
+
+<% if scope.lookupvar('nchc::params::hadoop::kerberos_mode') == "yes" %>
+    <property>
+        <name>dfs.block.access.token.enable</name>
+        <value>true</value>
+    </property>
+    
+    <property>
+        <name>dfs.namenode.keytab.file</name>
+        <value><%= scope.lookupvar('nchc::params::hadoop::namenode_keytab') %></value>
+    </property>
+    <property>
+        <name>dfs.namenode.kerberos.principal</name>
+        <value><%= scope.lookupvar('nchc::params::hadoop::namenode_primary') %>/_HOST@<%= scope.lookupvar('nchc::params::hadoop::kerberos_realm') %></value>
+    </property>
+    <property>
+        <name>dfs.namenode.kerberos.internal.spnego.principal</name>
+        <value>HTTP/_HOST@<%= scope.lookupvar('nchc::params::hadoop::kerberos_realm') %></value>
+    </property>
+
+    <property>
+        <name>dfs.secondary.namenode.keytab.file</name>
+        <value><%= scope.lookupvar('nchc::params::hadoop::secondarynn_keytab') %></value>
+    </property>
+    <property>
+        <name>dfs.secondary.namenode.kerberos.principal</name>
+        <value><%= scope.lookupvar('nchc::params::hadoop::secondarynn_primary') %>/_HOST@<%= scope.lookupvar('nchc::params::hadoop::kerberos_realm') %></value>
+    </property>
+    <property>
+        <name>dfs.secondary.namenode.kerberos.internal.spnego.principal</name>
+        <value>HTTP/_HOST@<%= scope.lookupvar('nchc::params::hadoop::kerberos_realm') %></value>
+    </property>
+
+    <property>
+        <name>dfs.datanode.data.dir.perm</name>
+        <value>700</value>
+    </property>
+    <property>
+        <name>dfs.datanode.address</name>
+        <value>0.0.0.0:1004</value>
+    </property>
+    <property>
+        <name>dfs.datanode.http.address</name>
+        <value>0.0.0.0:1006</value>
+    </property>
+    <property>
+        <name>dfs.datanode.keytab.file</name>
+        <value><%= scope.lookupvar('nchc::params::hadoop::datanode_keytab') %></value>
+    </property>
+    <property>
+        <name>dfs.datanode.kerberos.principal</name>
+        <value><%= scope.lookupvar('nchc::params::hadoop::datanode_primary') %>/_HOST@<%= scope.lookupvar('nchc::params::hadoop::kerberos_realm') %></value>
+    </property>
+
+
+    <% if scope.lookupvar('nchc::params::hadoop::qjm_ha_mode') == "yes" %>
+    <property>
+        <name>dfs.journalnode.keytab.file</name>
+        <value><%= scope.lookupvar('nchc::params::hadoop::journalnode_keytab') %></value>
+    </property>
+    <property>
+        <name>dfs.journalnode.kerberos.principal</name>
+        <value><%= scope.lookupvar('nchc::params::hadoop::journalnode_primary') %>/_HOST@<%= scope.lookupvar('nchc::params::hadoop::kerberos_realm') %></value>
+    </property>
+    <property>
+        <name>dfs.journalnode.kerberos.internal.spnego.principal</name>
+        <value>HTTP/_HOST@<%= scope.lookupvar('nchc::params::hadoop::kerberos_realm') %></value>
+    </property>
+    <% end %>
 
 <% end %>
 

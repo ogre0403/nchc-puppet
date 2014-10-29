@@ -11,7 +11,7 @@ class nchc::params::hadoop{
     $hadoop_base =  "/opt/hadoop_version"
     $hadoop_current = "/opt/hadoop"
     #slaves
-    $slaves = ["DN1-agent","DN2-agent"]
+    $slaves = ["DN1-agent","DN2-agent","NN"]
     
 
     # core-site.xml
@@ -81,5 +81,43 @@ class nchc::params::hadoop{
 
     #$enable_capacity_scheduler = "yes"
     $scheduler_type = "fair" #fifo| capacity|fair
+
+    # security configuration
+    $kerberos_mode = "yes"
+    if  $kerberos_mode == "yes"{
+        $jsvc_base = "/opt/jsvc_version"
+        $jsvc_path = "/opt/jsvc"
+        $secure_user = "$hdadm"
+        $kerberos_realm = "NCHC.TC"
+
+        $keytab_base = "/tmp/keytab"
+        $namenode_keytab = "${keytab_base}/hdadm.keytab"
+        $namenode_primary = "hdadm"
+        
+        $secondarynn_keytab = "${keytab_base}/hdadm.keytab"
+        $secondarynn_primary = "hdadm"
+        
+        $datanode_keytab = "${keytab_base}/hdadm.keytab"
+        $datanode_primary = "hdadm"
+        
+        $journalnode_keytab = "${keytab_base}/hdadm.keytab"
+        $journalnode_primary = "hdadm"
+    
+    }elsif $kerberos_mode == "no"{
+        $jsvc_path = undef
+        $jsvc_base = undef
+        $secure_user = undef
+        $kerberos_realm = undef
+        $keytab_base = undef
+        $namenode_keytab = undef
+        $namenode_primary = undef
+        $secondarynn_keytab = undef
+        $secondarynn_primary = undef
+        $datanode_keytab = undef
+        $datanode_primary = undef
+        $journalnode_keytab = undef
+        $journalnode_primary = undef
+
+    }
 }
 

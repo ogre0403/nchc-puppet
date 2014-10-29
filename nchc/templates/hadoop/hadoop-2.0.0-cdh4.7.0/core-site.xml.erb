@@ -48,5 +48,15 @@
     </property>
 <% end %>
 
+<% if scope.lookupvar('nchc::params::hadoop::kerberos_mode') == "yes" %>
+    <property>
+        <name>hadoop.security.authentication</name>
+        <value>kerberos</value>
+    </property>
+    <property>
+        <name>hadoop.security.authorization</name>
+        <value>true</value>
+    </property>
+<% end %>
 
 </configuration>
