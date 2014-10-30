@@ -124,6 +124,19 @@
         <name>dfs.datanode.data.dir.perm</name>
         <value>700</value>
     </property>
+
+    <% if scope.lookupvar('nchc::params::hadoop::secure_dn') == "no" %>
+    <property>
+        <name>dfs.datanode.address</name>
+        <value>0.0.0.0:51004</value>
+    </property>
+    <property>
+        <name>dfs.datanode.http.address</name>
+        <value>0.0.0.0:51006</value>
+    </property>
+    <% end %>
+
+    <% if scope.lookupvar('nchc::params::hadoop::secure_dn') == "yes" %>
     <property>
         <name>dfs.datanode.address</name>
         <value>0.0.0.0:1004</value>
@@ -132,6 +145,7 @@
         <name>dfs.datanode.http.address</name>
         <value>0.0.0.0:1006</value>
     </property>
+    <% end %>
     <property>
         <name>dfs.datanode.keytab.file</name>
         <value><%= scope.lookupvar('nchc::params::hadoop::datanode_keytab') %></value>
@@ -141,6 +155,13 @@
         <value><%= scope.lookupvar('nchc::params::hadoop::datanode_primary') %>/_HOST@<%= scope.lookupvar('nchc::params::hadoop::kerberos_realm') %></value>
     </property>
 
+
+    <% if scope.lookupvar('nchc::params::hadoop::secure_dn') == "no" %>
+    <property>  
+        <name>ignore.secure.ports.for.testing</name>  
+        <value>true</value>  
+    </property>
+    <% end %>
 
     <% if scope.lookupvar('nchc::params::hadoop::qjm_ha_mode') == "yes" %>
     <property>

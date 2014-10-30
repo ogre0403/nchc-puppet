@@ -80,55 +80,64 @@ class nchc::hadoop::package{
     if $nchc::params::hadoop::kerberos_mode == "yes" and
         "$::hostname" in $nchc::params::hadoop::slaves {
         
-        file {"$nchc::params::hadoop::jsvc_base":
-            ensure => "directory",
-            owner => "${nchc::params::hadoop::hdadm}",
-            group => "${nchc::params::hadoop::hdgrp}",
-            alias => "jsvc-base",
-            before => File["jsvc-tgz"],
-        }
+        if $nchc::params::hadoop::secure_dn == "yes"{
+            file {"$nchc::params::hadoop::jsvc_base":
+                ensure => "directory",
+                owner => "${nchc::params::hadoop::hdadm}",
+                group => "${nchc::params::hadoop::hdgrp}",
+                alias => "jsvc-base",
+                before => File["jsvc-tgz"],
+            }
     
-        file { "${nchc::params::hadoop::jsvc_base}/commons-daemon-1.0.15-src.tar.gz":
-            mode => 0644,
-            ensure => present,
-            owner => "${nchc::params::hadoop::hdadm}",
-            group => "${nchc::params::hadoop::hdgrp}",
-            alias => "jsvc-tgz",
-            before => Exec["untar-jsvc"],
-            source => "puppet:///modules/nchc/hadoop/tarball/commons-daemon-1.0.15-src.tar.gz",
-        }
+            file { "${nchc::params::hadoop::jsvc_base}/commons-daemon-1.0.15-src.tar.gz":
+                mode => 0644,
+                ensure => present,
+                owner => "${nchc::params::hadoop::hdadm}",
+                group => "${nchc::params::hadoop::hdgrp}",
+                alias => "jsvc-tgz",
+                before => Exec["untar-jsvc"],
+                source => "puppet:///modules/nchc/hadoop/tarball/commons-daemon-1.0.15-src.tar.gz",
+            }
 
-        exec { "untar ${nchc::params::hadoop::jsvc_base}/commons-daemon-1.0.15-src.tar.gz":
-            command => "tar xfvz ${nchc::params::hadoop::jsvc_base}/commons-daemon-1.0.15-src.tar.gz",
-            cwd => "${nchc::params::hadoop::jsvc_base}",
-            creates => "${nchc::params::hadoop::jsvc_base}/commons-daemon-1.0.15-src",
-            alias => "untar-jsvc",
-            user => "${nchc::params::hadoop::hdadm}",
-            onlyif => "test 0 -eq $(ls -al ${nchc::params::hadoop::jsvc_base}/commons-daemon-1.0.15-src | grep -c src)",
-            before => Exec["build-jsvc"], 
-            path   => ["/bin", "/usr/bin", "/usr/sbin"],  
-            require => File["jsvc-tgz"],
-        }
+            exec { "untar ${nchc::params::hadoop::jsvc_base}/commons-daemon-1.0.15-src.tar.gz":
+                command => "tar xfvz ${nchc::params::hadoop::jsvc_base}/commons-daemon-1.0.15-src.tar.gz",
+                cwd => "${nchc::params::hadoop::jsvc_base}",
+                creates => "${nchc::params::hadoop::jsvc_base}/commons-daemon-1.0.15-src",
+                alias => "untar-jsvc",
+                user => "${nchc::params::hadoop::hdadm}",
+                onlyif => "test 0 -eq $(ls -al ${nchc::params::hadoop::jsvc_base}/commons-daemon-1.0.15-src | grep -c src)",
+                before => Exec["build-jsvc"], 
+                path   => ["/bin", "/usr/bin", "/usr/sbin"],  
+                require => File["jsvc-tgz"],
+            }
 
-        exec { "make jsvc":
-            command => "./configure --with-java=${nchc::params::hadoop::hadoop_jdk}; make",
-            cwd => "${nchc::params::hadoop::jsvc_base}/commons-daemon-1.0.15-src/src/native/unix",
-            alias => "build-jsvc",
-            user => "${nchc::params::hadoop::hdadm}",
-            #require => [ Package["make"], Package["gcc"] ],
-            path    => ["/bin", "/usr/bin", "/usr/sbin", "${nchc::params::hadoop::jsvc_base}/commons-daemon-1.0.15-src/src/native/unix"],
-            creates => "${nchc::params::hadoop::jsvc_base}/commons-daemon-1.0.15-src/src/native/unix/jsvc",
-        }
+            exec { "make jsvc":
+                command => "./configure --with-java=${nchc::params::hadoop::hadoop_jdk}; make",
+                cwd => "${nchc::params::hadoop::jsvc_base}/commons-daemon-1.0.15-src/src/native/unix",
+                alias => "build-jsvc",
+                user => "${nchc::params::hadoop::hdadm}",
+                path    => ["/bin", "/usr/bin", "/usr/sbin", "${nchc::params::hadoop::jsvc_base}/commons-daemon-1.0.15-src/src/native/unix"],
+                creates => "${nchc::params::hadoop::jsvc_base}/commons-daemon-1.0.15-src/src/native/unix/jsvc",
+            }
 
-        file { "$nchc::params::hadoop::jsvc_path":
-            ensure => 'link',
-            owner => "${nchc::params::hadoop::hdadm}",
-            group => "${nchc::params::hadoop::hdgrp}",
-            target => "${nchc::params::hadoop::jsvc_base}/commons-daemon-1.0.15-src/src/native/unix",
-            require => Exec["build-jsvc"],
+            file { "$nchc::params::hadoop::jsvc_path":
+                ensure => 'link',
+                owner => "${nchc::params::hadoop::hdadm}",
+                group => "${nchc::params::hadoop::hdgrp}",
+                target => "${nchc::params::hadoop::jsvc_base}/commons-daemon-1.0.15-src/src/native/unix",
+                require => Exec["build-jsvc"],
+            }
+        } elsif $nchc::params::hadoop::secure_dn == "no" {
+            file { "$nchc::params::hadoop::jsvc_base":
+                ensure => absent,
+                force => true,
+            }
+
+            file { "$nchc::params::hadoop::jsvc_path":
+                ensure => absent,
+            }
         }
     }
-
 
 }
 

@@ -108,6 +108,8 @@ class nchc::params::hadoop{
         
         $journalnode_keytab = "${keytab_base}/hdadm.keytab"
         $journalnode_primary = "hdadm"
+        
+        $secure_dn = "no"
     
     }elsif $kerberos_mode == "no"{
         $jsvc_path = undef
@@ -123,6 +125,7 @@ class nchc::params::hadoop{
         $datanode_primary = undef
         $journalnode_keytab = undef
         $journalnode_primary = undef
+        $secure_dn = undef
 
     }
 }
