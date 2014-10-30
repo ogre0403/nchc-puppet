@@ -98,4 +98,41 @@
     </property>
 <% end %>
 
+
+<% if scope.lookupvar('nchc::params::hadoop::kerberos_mode') == "yes" %>
+
+    <property>
+        <name>yarn.resourcemanager.keytab</name>
+        <value><%= scope.lookupvar('nchc::params::hadoop::resourcemanager_keytab') %></value>
+    </property>
+    <property>
+        <name>yarn.resourcemanager.principal</name>
+        <value><%= scope.lookupvar('nchc::params::hadoop::resourcemanager_primary') %>/_HOST@<%= scope.lookupvar('nchc::params::hadoop::kerberos_realm') %></value>
+    </property>
+    
+    <property>
+        <name>yarn.nodemanager.keytab</name>
+        <value><%= scope.lookupvar('nchc::params::hadoop::nodemanager_keytab') %></value>
+    </property>
+    <property>
+        <name>yarn.nodemanager.principal</name>
+        <value><%= scope.lookupvar('nchc::params::hadoop::nodemanager_primary') %>/_HOST@<%= scope.lookupvar('nchc::params::hadoop::kerberos_realm') %></value>
+    </property>
+
+    <property>
+        <name>yarn.nodemanager.container-executor.class</name>
+        <value>org.apache.hadoop.yarn.server.nodemanager.LinuxContainerExecutor</value>
+    </property>
+
+    <property>
+        <name>yarn.nodemanager.linux-container-executor.group</name>
+        <value><%= scope.lookupvar('nchc::params::hadoop::hdgrp') %></value>
+    </property>
+    <property>
+        <name>yarn.nodemanager.linux-container-executor.path</name>
+        <value><%= scope.lookupvar('nchc::params::hadoop::hadoop_current') %>/bin/container-executor</value>
+    </property>
+<% end %>
+
+
 </configuration>

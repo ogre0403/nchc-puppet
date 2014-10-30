@@ -93,7 +93,8 @@ class nchc::params::hadoop{
     if  $kerberos_mode == "yes"{
         $jsvc_base = "/opt/jsvc_version"
         $jsvc_path = "/opt/jsvc"
-        $secure_user = "$hdadm"
+        $secure_user = "$hdadm" # in hadoop-env
+        $secure_dn = "no"
         $kerberos_realm = "NCHC.TC"
 
         $keytab_base = "/tmp/keytab"
@@ -109,7 +110,14 @@ class nchc::params::hadoop{
         $journalnode_keytab = "${keytab_base}/hdadm.keytab"
         $journalnode_primary = "hdadm"
         
-        $secure_dn = "no"
+        $resourcemanager_keytab = "${keytab_base}/hdadm.keytab"
+        $resourcemanager_primary = "hdadm"
+
+        $nodemanager_keytab = "${keytab_base}/hdadm.keytab"
+        $nodemanager_primary = "hdadm"
+    
+        $jobhistory_keytab = "${keytab_base}/hdadm.keytab"
+        $jobhistory_primary = "hdadm"
     
     }elsif $kerberos_mode == "no"{
         $jsvc_path = undef
@@ -126,6 +134,12 @@ class nchc::params::hadoop{
         $journalnode_keytab = undef
         $journalnode_primary = undef
         $secure_dn = undef
+        $resourcemanager_keytab = undef
+        $resourcemanager_primary = undef
+        $nodemanager_keytab = undef
+        $nodemanager_primary = undef
+        $jobhistory_keytab = undef
+        $jobhistory_primary = undef
 
     }
 }

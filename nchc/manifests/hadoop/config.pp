@@ -225,6 +225,33 @@ class nchc::hadoop::config{
         }
     }
 
+    
+    if $nchc::params::hadoop::kerberos_mode == "yes" {
+        file {"/etc/container-executor.cfg":
+            ensure => "present",
+            owner => "root",
+            group => "root",
+            mode => "400",
+            content => template("nchc/hadoop/${nchc::params::hadoop::hadoop_version}/container-executor.cfg.erb"),
+
+        }
+        file {"${nchc::params::hadoop::hadoop_current}/bin/container-executor":
+            ensure => "present",
+            owner => "root",
+            group => "${nchc::params::hadoop::hdgrp}",
+            mode => "6050",
+            source => "puppet:///modules/nchc/hadoop/lib/container-executor",  
+        }
+        
+    } elsif $nchc::params::hadoop::kerberos_mode == "no" {
+
+        file {"/etc/container-executor.cfg":
+            ensure => "absent",
+        }
+        file {"${nchc::params::hadoop::hadoop_current}/bin/container-executor":
+            ensure => "absent",
+        }
+    }
 
     if $nchc::params::hadoop::qjm_ha_mode == "no" and  
         "${nchc::params::hadoop::formatNN}" == "yes" {
