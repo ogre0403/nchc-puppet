@@ -10,21 +10,21 @@ Following big data related open source peoject can be installed and configured u
 Quick start
 --------------------
 1. clone the github repo or download the latest release:
-    git clone https://github.com/ogre0403/nchc-puppet.git
+	git clone https://github.com/ogre0403/nchc-puppet.git
 
 2. put package tar ball in corresponding folder
-    cp hadoop-2.0.0-cdh4.0.0.tar.gz nchc-puppet/nchc/files/hadoop/tarball
-    cp hbase-0.94.15-cdh4.7.0.tar.gz nchc-puppet/nchc/files/hbase/tarball
-    cp  zookeeper-3.4.5-cdh4.7.0.tar.gz nchc-puppet/nchc/files/zookeeper/tarball
+	cp hadoop-2.0.0-cdh4.0.0.tar.gz nchc-puppet/nchc/files/hadoop/tarball
+	cp hbase-0.94.15-cdh4.7.0.tar.gz nchc-puppet/nchc/files/hbase/tarball
+	cp  zookeeper-3.4.5-cdh4.7.0.tar.gz nchc-puppet/nchc/files/zookeeper/tarball
 
 3. In /etc/puppet/manifests/site.pp, define:
 
-    node '<hadoop hosts>' {
-        include nchc::java::install
-        include nchc::hadoop::install
-        include nchc::hbase::install
-        include nchc::zookeepr::install
-    }
+	node '<hadoop hosts>' {
+		include nchc::java::install
+		include nchc::hadoop::install
+		include nchc::hbase::install
+		include nchc::zookeepr::install
+	}
 
 4. Parameters definition of each submoudle is defined in nchc-puppet/nchc/manifests/params 
 
