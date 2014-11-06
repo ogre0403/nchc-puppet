@@ -36,10 +36,11 @@ class nchc::hadoop::config{
         require => File["hadoop-tmp-dir"],
     }
 
-    multidir { $nchc::params::hadoop::journal_data_dir: 
-        require => File["hadoop-tmp-dir"],
+    if $nchc::params::hadoop::qjm_ha_mode == "yes" {
+        multidir { $nchc::params::hadoop::journal_data_dir: 
+            require => File["hadoop-tmp-dir"],
+        }
     }
-
     multidir { $nchc::params::hadoop::yarn_nodemanager_localdirs: 
         require => File["hadoop-tmp-dir"],
     }

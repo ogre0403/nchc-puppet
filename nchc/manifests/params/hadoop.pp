@@ -11,7 +11,7 @@ class nchc::params::hadoop{
     $hadoop_base =  "/opt/hadoop_version"
     $hadoop_current = "/opt/hadoop"
     #slaves
-    $slaves = ["DN1-agent","DN2-agent","NN"]
+    $slaves = ["DN1-agent","DN2-agent"]
     
 
     # core-site.xml
@@ -50,10 +50,10 @@ class nchc::params::hadoop{
     $reduce_opt = "800m"
 
     
-    $formatNN = "no"
+    $formatNN = "yes"
 
     # HA configuration
-    $qjm_ha_mode = "yes"
+    $qjm_ha_mode = "no"
     if $qjm_ha_mode == "yes" {
         $dfs_nameservices = "MYHDFS"
         $standby_master = "NN"
@@ -75,10 +75,10 @@ class nchc::params::hadoop{
     }
 
     #rack-aware configuration
-    $rack_aware = "yes"
+    $rack_aware = "no"
     
     # enable ganglia monitor configuration
-    $ganglia_monitor = "yes"
+    $ganglia_monitor = "no"
     if $ganglia_monitor == "yes" {
         $gmetad_server = "NN-agent"
     }elsif $ganglia_monitor == "no"{
@@ -86,10 +86,10 @@ class nchc::params::hadoop{
     }
 
     #$enable_capacity_scheduler = "yes"
-    $scheduler_type = "fair" #fifo| capacity|fair
+    $scheduler_type = "fifo" #fifo| capacity|fair
 
     # security configuration
-    $kerberos_mode = "yes"
+    $kerberos_mode = "no"
     if  $kerberos_mode == "yes"{
         $jsvc_base = "/opt/jsvc_version"
         $jsvc_path = "/opt/jsvc"
