@@ -15,7 +15,8 @@ class nchc::params::bashrc (
     $bashrc_template = $operatingsystem ? {
       centos                => 'nchc/home/rh_bashrc.erb',
       redhat                => 'nchc/home/rh_bashrc.erb',
-      /(?i)(ubuntu|debian)/ => 'nchc/home/debian_bashrc.erb',
+      /(?i)(debian)/        => 'nchc/home/debian_bashrc.erb',
+      /(?i)(ubuntu)/        => 'nchc/home/ubuntu_bashrc.erb',
       default               => 'nchc/home/rh_bashrc.erb',
     }
 
