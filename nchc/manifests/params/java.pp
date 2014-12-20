@@ -2,8 +2,11 @@
 
 class nchc::params::java {
 
+        $java_source = $::hostname ? {
+            default	=> "jdk-7u71-linux-x64.tar.gz",
+        }
         $java_version = $::hostname ? {
-            default	=> "1.7.0_51",
+            default	=> "jdk1.7.0_71",
         }
         $java_base = $::hostname ? {
             default     => "/opt/java_version",
